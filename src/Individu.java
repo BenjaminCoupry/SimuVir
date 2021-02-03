@@ -9,7 +9,7 @@ public class Individu {
     double age;
     boolean mort;
     double soins;
-    double protections;
+    double protectionEmission;
 
     public double getSoins() {
         return soins;
@@ -19,12 +19,12 @@ public class Individu {
         this.soins = soins;
     }
 
-    public double getProtections() {
-        return protections;
+    public double getProtectionEmission() {
+        return protectionEmission;
     }
 
-    public void setProtections(double protections) {
-        this.protections = protections;
+    public void setProtectionEmission(double protectionEmission) {
+        this.protectionEmission = protectionEmission;
     }
 
     public HashMap<String, Immunite> getImmunites() {

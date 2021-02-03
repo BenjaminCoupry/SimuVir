@@ -41,9 +41,9 @@ public class Infection {
         double delta = famille.getReproduction()*chargeVirale-famille.getFragilite()*i.getActivite();
         chargeVirale = Math.max(0,chargeVirale+delta*dt);
     }
-    public double getProbaInfection(double distance,double protection)
+    public double getPotentielTransmission(double distance, double protectionEmissions)
     {
-        return (1.0-Math.exp(-distance*chargeVirale*famille.getContagiosite()))*(1.0-protection);
+        return (1.0-Math.exp(-(chargeVirale/Math.pow(distance,2))*famille.getContagiosite()))*(1.0-protectionEmissions);
     }
     public double getProbaDeces(double soins)
     {
