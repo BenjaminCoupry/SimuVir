@@ -27,7 +27,7 @@ public class Immunite {
     }
     public void Stimuler(Vaccin v)
     {
-        qteVaccin = v.getQteInitiale();
+        qteVaccin += v.getQteInitiale();
     }
 
 
