@@ -43,9 +43,9 @@ public class Infection {
         this.chargeVirale = chargeVirale;
     }
 
-    public void Update(Immunite i, double dt)
+    public void Update( double dt)
     {
-        double delta = virus.getReproduction()*chargeVirale- virus.getFragilite()*i.getActivite();
+        double delta = virus.getReproduction()*chargeVirale- virus.getFragilite()*immunite.getActivite();
         chargeVirale = Math.max(0,chargeVirale+delta*dt);
     }
     public double getPotentielTransmission(double distance )

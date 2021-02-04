@@ -80,7 +80,7 @@ public class Individu {
         if(!mort) {
             for (Infection inf : infections.values()) {
                 Immunite imu = immunites.get(inf.getVirus().getNom());
-                inf.Update(imu, dt);
+                inf.Update(dt);
                 imu.Update(inf, dt);
                 double pmort = inf.getProbaDeces(soins);
                 if (Fonctions.r.nextDouble() < pmort) {
@@ -90,8 +90,6 @@ public class Individu {
             }
         }
     }
-
-
 
     public void Vacciner(Vaccin vaccin)
     {
@@ -159,11 +157,25 @@ public class Individu {
 
     public void Infecter(Virus v)
     {
+        List<Virus> virsFamille = getVirusConnus(v.getFamille());
         Monde.referencerVirus(v);
-        Immunite imnew = new Immunite(0,0,this,v);
-        immunites.putIfAbsent(v.getNom(),imnew);
-        Infection infnew = new Infection(v,immunites.get(v.getNom()),Constantes.chargeViraleInitaile,this);
-        infections.putIfAbsent(v.getNom(),infnew);
+        if(!immunites.containsKey(v.getNom())) {
+            Immunite imnew;
+            if (virsFamille.size() == 0) {
+                imnew = new Immunite(0, 0, this, v);
+            } else {
+                double immNative = 0;
+                for (Virus vcommun : virsFamille) {
+                    Immunite immuProche = immunites.get(vcommun.getNom());
+                    immNative = Math.max(immuProche.getActivite(), immNative);
+                }
+                immNative = immNative * Constantes.partageImmuniteFamille;
+                imnew = new Immunite(immNative, 0, this, v);
+            }
+            immunites.put(v.getNom(), imnew);
+        }
+        Infection infnew = new Infection(v, immunites.get(v.getNom()), Constantes.chargeViraleInitaile, this);
+        infections.putIfAbsent(v.getNom(), infnew);
     }
 
 
