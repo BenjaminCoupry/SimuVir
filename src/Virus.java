@@ -2,13 +2,26 @@ import java.util.function.Function;
 
 public class Virus {
     String nom;
+    String famille;
     Function<Double,Double> lethalite;
     double mutabilite;
     double contagiosite;
-    double gainImmunite;
-    double perteImmunite;
+    Function<Double,Double> gainImmunite;
+    Function<Double,Double> perteImmunite;
     double fragilite;
     double reproduction;
+
+    public Virus(String nom, String famille, Function<Double, Double> lethalite, double mutabilite, double contagiosite, Function<Double, Double> gainImmunite, Function<Double, Double> perteImmunite, double fragilite, double reproduction) {
+        this.nom = nom;
+        this.famille = famille;
+        this.lethalite = lethalite;
+        this.mutabilite = mutabilite;
+        this.contagiosite = contagiosite;
+        this.gainImmunite = gainImmunite;
+        this.perteImmunite = perteImmunite;
+        this.fragilite = fragilite;
+        this.reproduction = reproduction;
+    }
 
     public double getReproduction() {
         return reproduction;
@@ -50,19 +63,19 @@ public class Virus {
         this.contagiosite = contagiosite;
     }
 
-    public double getGainImmunite() {
+    public Function<Double,Double> getGainImmunite() {
         return gainImmunite;
     }
 
-    public void setGainImmunite(double gainImmunite) {
+    public void setGainImmunite(Function<Double,Double> gainImmunite) {
         this.gainImmunite = gainImmunite;
     }
 
-    public double getPerteImmunite() {
+    public Function<Double,Double> getPerteImmunite() {
         return perteImmunite;
     }
 
-    public void setPerteImmunite(double perteImmunite) {
+    public void setPerteImmunite(Function<Double,Double> perteImmunite) {
         this.perteImmunite = perteImmunite;
     }
 
@@ -72,5 +85,26 @@ public class Virus {
 
     public void setFragilite(double fragilite) {
         this.fragilite = fragilite;
+    }
+
+    public String getFamille() {
+        return famille;
+    }
+
+    public void setFamille(String famille) {
+        this.famille = famille;
+    }
+    public Virus muter()
+    {
+        //TODO mutation
+        if(Fonctions.r.nextDouble()<mutabilite)
+        {
+            String nouvNom = nom+"_mutation"+Fonctions.getUID();
+            return new Virus(nouvNom,famille,lethalite,mutabilite,contagiosite,gainImmunite,perteImmunite,fragilite,reproduction);
+        }
+        else
+        {
+            return this;
+        }
     }
 }

@@ -1,13 +1,16 @@
+import java.util.List;
+
 public class Vaccin {
-    Virus cible;
+
+    List<Virus> cibles;
     double qteInitiale;
 
-    public Virus getCible() {
-        return cible;
+    public List<Virus> getCibles() {
+        return cibles;
     }
 
-    public void setCible(Virus cible) {
-        this.cible = cible;
+    public void setCibles(List<Virus> cibles) {
+        this.cibles = cibles;
     }
 
     public double getQteInitiale() {

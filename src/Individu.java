@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
 public class Individu {
     HashMap<String,Immunite> immunites;
-    List<Infection> infections;
+    HashMap<String,Infection> infections;
     Function<Double,Double> probaMortNaturelle;
     double age;
     boolean mort;
@@ -35,11 +36,11 @@ public class Individu {
         this.immunites = immunites;
     }
 
-    public List<Infection> getInfections() {
+    public HashMap<String,Infection> getInfections() {
         return infections;
     }
 
-    public void setInfections(List<Infection> infections) {
+    public void setInfections(HashMap<String,Infection> infections) {
         this.infections = infections;
     }
 
@@ -77,8 +78,8 @@ public class Individu {
             }
         }
         if(!mort) {
-            for (Infection inf : infections) {
-                Immunite imu = immunites.get(inf.getFamille().getNom());
+            for (Infection inf : infections.values()) {
+                Immunite imu = immunites.get(inf.getVirus().getNom());
                 inf.Update(imu, dt);
                 imu.Update(inf, dt);
                 double pmort = inf.getProbaDeces(soins);
@@ -94,8 +95,75 @@ public class Individu {
 
     public void Vacciner(Vaccin vaccin)
     {
-        Immunite imu = immunites.get(vaccin.getCible().getNom());
-        imu.Stimuler(vaccin);
+        for(Virus cible : vaccin.getCibles()) {
+            Immunite imu = immunites.get(cible.getNom());
+            imu.Stimuler(vaccin);
+        }
+    }
+    public List<Virus> getVirusConnus(String famille)
+    {
+        List<Virus> res = new ArrayList<>();
+        for (Infection inf : infections.values()) {
+            Virus v = inf.getVirus();
+            if(v.getFamille().equals(famille))
+            {
+                if(!res.contains(v))
+                {
+                    res.add(v);
+                }
+            }
+        }
+        for (Immunite immunite : immunites.values()) {
+            Virus v = immunite.getVirus();
+            if(v.getFamille().equals(famille))
+            {
+                if(!res.contains(v))
+                {
+                    res.add(v);
+                }
+            }
+        }
+        return res;
+    }
+
+    public boolean Tester(TestVirus tv)
+    {
+        List<Virus> virs = getVirusConnus(tv.getFamilleCible());
+        double val=0;
+        for(Virus vir : virs) {
+            if (tv.getType().equals(TypeTest.IMMUNITE)) {
+                if(immunites.containsKey(vir.getNom())) {
+                    Immunite imu = immunites.get(vir.getNom());
+                    val += imu.getActivite();
+                }
+            } else {
+                if(infections.containsKey(vir.getNom())) {
+                    Infection inf = infections.get(vir.getNom());
+                    val += inf.getChargeVirale();
+                }
+            }
+        }
+        return tv.tester(val);
+
+    }
+
+    public void transmettreInfections(Individu cible, double modificateurTransmission, double distance)
+    {
+        for (Infection inf : infections.values()) {
+            double p = modificateurTransmission * inf.getPotentielTransmission(distance);
+            if (Fonctions.r.nextDouble() < p) {
+                cible.Infecter(inf.getVirus().muter());
+            }
+        }
+    }
+
+    public void Infecter(Virus v)
+    {
+        Monde.referencerVirus(v);
+        Immunite imnew = new Immunite(0,0,this,v);
+        immunites.putIfAbsent(v.getNom(),imnew);
+        Infection infnew = new Infection(v,immunites.get(v.getNom()),Constantes.chargeViraleInitaile,this);
+        infections.putIfAbsent(v.getNom(),infnew);
     }
 
 

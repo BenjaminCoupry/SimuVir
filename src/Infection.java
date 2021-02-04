@@ -1,15 +1,22 @@
 public class Infection {
-    Virus famille;
+    Virus virus;
     Immunite immunite;
     double chargeVirale;
     Individu hote;
 
-    public Virus getFamille() {
-        return famille;
+    public Infection(Virus virus, Immunite immunite, double chargeVirale, Individu hote) {
+        this.virus = virus;
+        this.immunite = immunite;
+        this.chargeVirale = chargeVirale;
+        this.hote = hote;
     }
 
-    public void setFamille(Virus famille) {
-        this.famille = famille;
+    public Virus getVirus() {
+        return virus;
+    }
+
+    public void setVirus(Virus virus) {
+        this.virus = virus;
     }
 
     public Individu getHote() {
@@ -38,17 +45,20 @@ public class Infection {
 
     public void Update(Immunite i, double dt)
     {
-        double delta = famille.getReproduction()*chargeVirale-famille.getFragilite()*i.getActivite();
+        double delta = virus.getReproduction()*chargeVirale- virus.getFragilite()*i.getActivite();
         chargeVirale = Math.max(0,chargeVirale+delta*dt);
     }
-    public double getPotentielTransmission(double distance, double protectionEmissions)
+    public double getPotentielTransmission(double distance )
     {
-        return (1.0-Math.exp(-(chargeVirale/Math.pow(distance,2))*famille.getContagiosite()))*(1.0-protectionEmissions);
+        double protectionEmissions = hote.getProtectionEmission();
+        double k_dist = 1.0-Math.exp(-(1/Math.pow(distance*protectionEmissions,2)));
+        double k_vir = 1.0-Math.exp(-(chargeVirale* virus.getContagiosite()));
+        return k_dist*k_vir;
     }
     public double getProbaDeces(double soins)
     {
         double age = hote.getAge();
-        double leth = famille.getLethalite().apply(age);
+        double leth = virus.getLethalite().apply(age);
        return (1.0-Math.exp(-chargeVirale*leth))*(1.0-soins);
     }
 
