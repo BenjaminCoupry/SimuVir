@@ -1,6 +1,6 @@
-package SrcEconomie;
+package Global.SrcEconomie;
 
-import SrcVirus.Individu;
+import Global.SrcVirus.Individu;
 
 import java.util.List;
 
@@ -12,8 +12,9 @@ public class Habitant extends Individu {
     Entreprise travail;
     Universite universite;
     List<Connaissance> connaissances;
+    List<Marchandise> inventaire;
     Poste poste;
-    double fondsMonetaires;
+    CompteBancaire compteBancaire;
 
     public String getPrenom() {
         return prenom;
@@ -71,11 +72,19 @@ public class Habitant extends Individu {
         this.poste = poste;
     }
 
-    public double getFondsMonetaires() {
-        return fondsMonetaires;
+    public CompteBancaire getCompteBancaire() {
+        return compteBancaire;
     }
 
-    public void setFondsMonetaires(double fondsMonetaires) {
-        this.fondsMonetaires = fondsMonetaires;
+    public void setCompteBancaire(CompteBancaire compteBancaire) {
+        this.compteBancaire = compteBancaire;
+    }
+
+    public List<Marchandise> getInventaire() {
+        return inventaire;
+    }
+
+    public void setInventaire(List<Marchandise> inventaire) {
+        this.inventaire = inventaire;
     }
 }

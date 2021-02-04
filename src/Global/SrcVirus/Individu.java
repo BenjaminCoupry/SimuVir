@@ -1,4 +1,6 @@
-package SrcVirus;
+package Global.SrcVirus;
+
+import Global.Monde;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,7 +171,7 @@ public class Individu {
                 Immunite immuProche = immunites.get(vcommun.getNom());
                 immNative = Math.max(immuProche.getActivite(), immNative);
             }
-            immNative = immNative * Constantes.partageImmuniteFamille;
+            immNative = immNative * ConstantesVirus.partageImmuniteFamille;
            return immNative;
         }
     }
@@ -181,13 +183,13 @@ public class Individu {
         if(!immunites.containsKey(v.getNom())) {
             Immunite imnew = new Immunite(immNative, 0, this, v);;
             immunites.put(v.getNom(), imnew);
-            Infection infnew = new Infection(v, imnew, Constantes.chargeViraleInitaile, this);
+            Infection infnew = new Infection(v, imnew, ConstantesVirus.chargeViraleInitaile, this);
             infections.put(v.getNom(), infnew);
         }
         else
         {
             Infection infActuelle = infections.get(v.getNom());
-            infActuelle.setChargeVirale(Math.max(infActuelle.getChargeVirale(),Constantes.chargeViraleInitaile));
+            infActuelle.setChargeVirale(Math.max(infActuelle.getChargeVirale(), ConstantesVirus.chargeViraleInitaile));
             Immunite immuniteActuelle = immunites.get(v.getNom());
             immuniteActuelle.setActivite(Math.max(immuniteActuelle.getActivite(),immNative));
         }

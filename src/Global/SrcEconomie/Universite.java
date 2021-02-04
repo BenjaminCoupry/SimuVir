@@ -1,12 +1,14 @@
-package SrcEconomie;
+package Global.SrcEconomie;
 
-import SrcVirus.Individu;
+import Global.SrcVirus.Individu;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Universite extends Entreprise {
     Formation formation;
     HashMap<Habitant,Double> tempsRestantAvantObtention;
+    List<Habitant> etudiants;
     int places;
 
     public void Update(double dt)
@@ -32,6 +34,7 @@ public class Universite extends Entreprise {
     public void delivrerDiplome(Habitant hab)
     {
         tempsRestantAvantObtention.remove(hab);
+        etudiants.remove(hab);
         formation.donner(hab);
         if(hab.getUniversite() == this)
         {
@@ -40,13 +43,17 @@ public class Universite extends Entreprise {
     }
     public boolean peutPostuler(Habitant hab)
     {
-        return places>tempsRestantAvantObtention.values().size() && hab.getUniversite() != this && formation.estApte(hab);
+        return places>etudiants.size() && hab.getUniversite() ==null && formation.estApte(hab);
     }
     public void inscrire(Habitant hab)
     {
         if(peutPostuler(hab)) {
             hab.setUniversite(this);
             tempsRestantAvantObtention.putIfAbsent(hab,formation.getTempsObtention());
+            if(!etudiants.contains(hab))
+            {
+                etudiants.add(hab);
+            }
         }
     }
 }

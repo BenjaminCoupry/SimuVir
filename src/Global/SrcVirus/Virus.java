@@ -1,4 +1,4 @@
-package SrcVirus;
+package Global.SrcVirus;
 
 import java.util.function.Function;
 

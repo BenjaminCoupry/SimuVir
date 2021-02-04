@@ -1,4 +1,4 @@
-package SrcEconomie;
+package Global.SrcEconomie;
 
 public enum TypeConnaissance {
 }

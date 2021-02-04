@@ -1,4 +1,4 @@
-package SrcEconomie;
+package Global.SrcEconomie;
 
 import java.util.List;
 
@@ -7,10 +7,11 @@ public class Poste {
     double importance;
     List<Connaissance> connaissancesRequises;
     Habitant occupant;
+    Entreprise entreprise;
 
-    public boolean estApte(Habitant hab)
+    public boolean peutPostuler(Habitant hab)
     {
-        return Connaissance.estApte(hab,connaissancesRequises);
+        return occupant == null && Connaissance.estApte(hab,connaissancesRequises);
     }
     public double importanceFournie()
     {
@@ -54,5 +55,18 @@ public class Poste {
 
     public void setOccupant(Habitant occupant) {
         this.occupant = occupant;
+    }
+
+    public void recruter(Habitant hab)
+    {
+        if(peutPostuler(hab)) {
+            hab.setPoste(this);
+            hab.setTravail(entreprise);
+            occupant = hab;
+            if(! entreprise.getEmployes().contains(hab))
+            {
+                entreprise.getEmployes().add(hab);
+            }
+        }
     }
 }

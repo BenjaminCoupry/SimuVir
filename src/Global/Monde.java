@@ -1,4 +1,6 @@
-package SrcVirus;
+package Global;
+
+import Global.SrcVirus.Virus;
 
 import java.util.List;
 

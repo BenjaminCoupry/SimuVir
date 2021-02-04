@@ -1,6 +1,6 @@
-package SrcEconomie;
+package Global.SrcEconomie;
 
-import SrcVirus.Lieu;
+import Global.SrcVirus.Lieu;
 
 import java.util.List;
 
@@ -8,11 +8,10 @@ public class Entreprise extends Lieu {
     String nom;
     List<Habitant> employes;
     double efficacite;
-    double fondsMonetaires;
+    CompteBancaire compteBancaire;
     List<Poste> postes;
     public void Update(double dt)
     {
-        payerSalaires();
         efficacite = calculerEfficacite();
 
     }
@@ -29,17 +28,20 @@ public class Entreprise extends Lieu {
         }
         return efficaciteReelle/efficacitePotentielle;
     }
-    public void payerSalaires()
+    public double payerSalaires()
     {
+        double sommes = 0;
         for(Poste p : postes)
         {
             if(p.getOccupant() != null)
             {
                 double salaire = p.getSalaire();
-                p.getOccupant().setFondsMonetaires(p.getOccupant().getFondsMonetaires()+salaire);
-                fondsMonetaires -= salaire;
+                sommes += salaire;
+                CompteBancaire compteEmploye =  p.getOccupant().getCompteBancaire();
+                compteBancaire.payer(compteEmploye,salaire,"Salaire "+nom);
             }
         }
+        return sommes;
     }
 
     public String getNom() {
@@ -66,13 +68,6 @@ public class Entreprise extends Lieu {
         this.efficacite = efficacite;
     }
 
-    public double getFondsMonetaires() {
-        return fondsMonetaires;
-    }
-
-    public void setFondsMonetaires(double fondsMonetaires) {
-        this.fondsMonetaires = fondsMonetaires;
-    }
 
     public List<Poste> getPostes() {
         return postes;
@@ -80,5 +75,13 @@ public class Entreprise extends Lieu {
 
     public void setPostes(List<Poste> postes) {
         this.postes = postes;
+    }
+
+    public CompteBancaire getCompteBancaire() {
+        return compteBancaire;
+    }
+
+    public void setCompteBancaire(CompteBancaire compteBancaire) {
+        this.compteBancaire = compteBancaire;
     }
 }

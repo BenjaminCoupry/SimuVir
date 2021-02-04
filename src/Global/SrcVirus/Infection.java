@@ -1,4 +1,4 @@
-package SrcVirus;
+package Global.SrcVirus;
 
 public class Infection {
     Virus virus;
