@@ -155,27 +155,41 @@ public class Individu {
         }
     }
 
-    public void Infecter(Virus v)
+    public double calculerImmuniteNative(Virus v)
     {
         List<Virus> virsFamille = getVirusConnus(v.getFamille());
-        Monde.referencerVirus(v);
-        if(!immunites.containsKey(v.getNom())) {
-            Immunite imnew;
-            if (virsFamille.size() == 0) {
-                imnew = new Immunite(0, 0, this, v);
-            } else {
-                double immNative = 0;
-                for (Virus vcommun : virsFamille) {
-                    Immunite immuProche = immunites.get(vcommun.getNom());
-                    immNative = Math.max(immuProche.getActivite(), immNative);
-                }
-                immNative = immNative * Constantes.partageImmuniteFamille;
-                imnew = new Immunite(immNative, 0, this, v);
+        Immunite imnew;
+        if (virsFamille.size() == 0) {
+            return 0;
+        } else {
+            double immNative = 0;
+            for (Virus vcommun : virsFamille) {
+                Immunite immuProche = immunites.get(vcommun.getNom());
+                immNative = Math.max(immuProche.getActivite(), immNative);
             }
-            immunites.put(v.getNom(), imnew);
+            immNative = immNative * Constantes.partageImmuniteFamille;
+           return immNative;
         }
-        Infection infnew = new Infection(v, immunites.get(v.getNom()), Constantes.chargeViraleInitaile, this);
-        infections.putIfAbsent(v.getNom(), infnew);
+    }
+
+    public void Infecter(Virus v)
+    {
+        Monde.referencerVirus(v);
+        double immNative = calculerImmuniteNative(v);
+        if(!immunites.containsKey(v.getNom())) {
+            Immunite imnew = new Immunite(immNative, 0, this, v);;
+            immunites.put(v.getNom(), imnew);
+            Infection infnew = new Infection(v, imnew, Constantes.chargeViraleInitaile, this);
+            infections.put(v.getNom(), infnew);
+        }
+        else
+        {
+            Infection infActuelle = infections.get(v.getNom());
+            infActuelle.setChargeVirale(Math.max(infActuelle.getChargeVirale(),Constantes.chargeViraleInitaile));
+            Immunite immuniteActuelle = immunites.get(v.getNom());
+            immuniteActuelle.setActivite(Math.max(immuniteActuelle.getActivite(),immNative));
+        }
+
     }
 
 
