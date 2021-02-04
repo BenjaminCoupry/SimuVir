@@ -1,3 +1,5 @@
+package SrcVirus;
+
 public class TestVirus {
     TypeTest type;
     String familleCible;

@@ -1,3 +1,5 @@
+package SrcVirus;
+
 import java.util.List;
 
 public class Vaccin {

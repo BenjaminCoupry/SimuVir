@@ -1,3 +1,5 @@
+package SrcVirus;
+
 public class Immunite {
     double activite;
     double qteVaccin;

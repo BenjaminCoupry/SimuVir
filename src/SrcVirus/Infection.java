@@ -1,3 +1,5 @@
+package SrcVirus;
+
 public class Infection {
     Virus virus;
     Immunite immunite;

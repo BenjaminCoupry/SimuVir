@@ -1,3 +1,5 @@
+package SrcVirus;
+
 import java.util.function.Function;
 
 public class Virus {
