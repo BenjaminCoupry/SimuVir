@@ -1,6 +1,7 @@
 package Global;
 
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
+import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
@@ -13,6 +14,8 @@ import java.util.List;
 public class Monde {
     static List<Virus> virusExistants;
     static List<Stockage> stockages;
+    static List<EntrepriseTransport> transporteurs;
+    static List<Boutique> boutiques;
 
     public static List<Virus> getVirusExistants() {
         return virusExistants;
@@ -53,5 +56,29 @@ public class Monde {
             }
         }
         return res;
+    }
+
+    public static List<Stockage> getStockages() {
+        return stockages;
+    }
+
+    public static void setStockages(List<Stockage> stockages) {
+        Monde.stockages = stockages;
+    }
+
+    public static List<EntrepriseTransport> getTransporteurs() {
+        return transporteurs;
+    }
+
+    public static void setTransporteurs(List<EntrepriseTransport> transporteurs) {
+        Monde.transporteurs = transporteurs;
+    }
+
+    public static List<Boutique> getBoutiques() {
+        return boutiques;
+    }
+
+    public static void setBoutiques(List<Boutique> boutiques) {
+        Monde.boutiques = boutiques;
     }
 }

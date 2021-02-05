@@ -8,6 +8,7 @@ import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Habitant;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
+import Global.SrcVirus.Lieu;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,20 @@ public class EntrepriseTransport extends Entreprise {
                     inventairesLivreurs.put(p.getOccupant(),null);
                     livraisons.put(p.getOccupant(),null);
                 }
+                if(ot.getStatut().equals(StatutLivraison.LIVRAISON))
+                {
+                    if(((Lieu)ot.getArrivee()).getVisiteurs().contains(p.getOccupant()))
+                    {
+                        ot.setStatut(StatutLivraison.FINIE);
+                    }
+                }
+                if(ot.getStatut().equals(StatutLivraison.RECUPERATION))
+                {
+                    if(((Lieu)ot.getDepart()).getVisiteurs().contains(p.getOccupant()))
+                    {
+                        ot.setStatut(StatutLivraison.LIVRAISON);
+                    }
+                }
             }
         }
     }
@@ -66,6 +81,31 @@ public class EntrepriseTransport extends Entreprise {
             Commande cmd = new Commande(client, tm, eClient.getCompteBancaire());
             commandes.add(cmd);
         }
+    }
+    public Lieu getObjectif(Habitant hab)
+    {
+        OrdreTransport ot = livraisons.get(hab);
+        if(ot != null)
+        {
+            if(ot.getStatut().equals(StatutLivraison.RECUPERATION))
+            {
+                return (Lieu)ot.getDepart();
+            }
+            if(ot.getStatut().equals(StatutLivraison.LIVRAISON))
+            {
+                return (Lieu)ot.getArrivee();
+            }
+            if(ot.getStatut().equals(StatutLivraison.FINIE))
+            {
+                return this;
+            }
+        }
+        return this;
+    }
+    public void Update(double dt)
+    {
+        super.Update(dt);
+        traiterCommandes();
     }
 
 

@@ -1,16 +1,22 @@
 package Global.SrcEconomie;
 
+import Global.Monde;
+import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
+import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
+import Global.SrcEconomie.Entreprises.Transport.Stockage;
+import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
+import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
 import Global.SrcVirus.Lieu;
 
 import java.util.List;
 
-public class Habitant extends Individu {
+public class Habitant extends Individu{
     String prenom;
     String nom;
 
@@ -22,6 +28,8 @@ public class Habitant extends Individu {
     Poste poste;
     CompteBancaire compteBancaire;
     Lieu position;
+    Lieu objectif;
+    TypeMarchandise volonteAchat;
 
     public String getPrenom() {
         return prenom;
@@ -93,5 +101,68 @@ public class Habitant extends Individu {
 
     public void setInventaire(List<Marchandise> inventaire) {
         this.inventaire = inventaire;
+    }
+
+
+    public void partirTravailler()
+    {
+        if(travail != null) {
+            if(travail instanceof EntrepriseTransport)
+            {
+                objectif = ((EntrepriseTransport) travail).getObjectif(this);
+            }
+            else {
+                objectif = travail;
+            }
+        }else
+        {
+            objectif = null;
+        }
+    }
+    public void rentrerDomicile()
+    {
+        if(residence != null) {
+            objectif = residence;
+        }else
+        {
+            objectif = null;
+        }
+    }
+    public void partirEtudier()
+    {
+        if(universite != null) {
+            objectif = universite;
+        }else
+        {
+            objectif = null;
+        }
+    }
+    public void partirAcheter()
+    {
+
+        if(volonteAchat != null)
+        {
+            List<Stockage> dispo = Monde.trouverDisponibilites(volonteAchat, TypeDisponibilite.MAGASIN);
+            if(dispo.contains(position))
+            {
+                objectif = position;
+                Boutique bt = (Boutique) position;
+                bt.vendre(volonteAchat,this);
+                volonteAchat = null;
+            }
+            else if(dispo.size()>0)
+            {
+                Boutique bt = (Boutique) dispo.get(Fonctions.r.nextInt(dispo.size()));
+                objectif = bt;
+            }
+            else
+            {
+                objectif = null;
+            }
+        }
+        else
+        {
+            objectif = null;
+        }
     }
 }

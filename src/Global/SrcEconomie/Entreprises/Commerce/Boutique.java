@@ -1,18 +1,22 @@
 package Global.SrcEconomie.Entreprises.Commerce;
 
+import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
 import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Habitant;
 import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcVirus.Fonctions;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Boutique extends Entreprise implements Stockage {
     List<Marchandise> stock;
-    List<TypeMarchandise> catalogue;
+    List<UsageMarchandise> catalogue;
     //TODO commandes aupres des usines pour remplir le catalogue
     //TODO pour les livraisons, garder un hashmap pour les livreurs indiquant la marchandise transportee, le lieu de depart et d'arrivee
     public boolean peutVendre(TypeMarchandise tm)
@@ -80,5 +84,20 @@ public class Boutique extends Entreprise implements Stockage {
                 .filter(march -> march.getTypeMarchandise().equals(tm))
                 .collect(Collectors.toList());
         return mt.size()>0;
+    }
+    public void passerCommandes()
+    {
+        if(Monde.getTransporteurs().size() >0) {
+            for (UsageMarchandise um : catalogue) {
+                List<Marchandise> mt = stock.stream()
+                        .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                        .collect(Collectors.toList());
+                int delta = um.getNbUsage() - mt.size();
+                for (int i = 0; i < delta; i++) {
+                    EntrepriseTransport et = Monde.getTransporteurs().get(Fonctions.r.nextInt(Monde.getTransporteurs().size()));
+                    et.passerCommande(this, um.getTypeMarchandise());
+                }
+            }
+        }
     }
 }
