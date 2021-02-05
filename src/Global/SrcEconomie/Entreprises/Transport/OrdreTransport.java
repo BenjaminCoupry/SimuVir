@@ -7,6 +7,14 @@ public class OrdreTransport {
     Stockage depart;
     Stockage arrivee;
     TypeMarchandise typeMarchandise;
+    StatutLivraison statut;
+
+    public OrdreTransport(Stockage depart, Stockage arrivee, TypeMarchandise typeMarchandise, StatutLivraison statut) {
+        this.depart = depart;
+        this.arrivee = arrivee;
+        this.typeMarchandise = typeMarchandise;
+        this.statut = statut;
+    }
 
     public Stockage getDepart() {
         return depart;
@@ -30,5 +38,13 @@ public class OrdreTransport {
 
     public void setTypeMarchandise(TypeMarchandise typeMarchandise) {
         this.typeMarchandise = typeMarchandise;
+    }
+
+    public StatutLivraison getStatut() {
+        return statut;
+    }
+
+    public void setStatut(StatutLivraison statut) {
+        this.statut = statut;
     }
 }

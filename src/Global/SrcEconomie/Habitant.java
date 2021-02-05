@@ -1,10 +1,12 @@
 package Global.SrcEconomie;
 
+import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
-import Global.SrcEconomie.Entreprises.Universite;
+import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcVirus.Individu;
+import Global.SrcVirus.Lieu;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Habitant extends Individu {
     List<Marchandise> inventaire;
     Poste poste;
     CompteBancaire compteBancaire;
+    Lieu position;
 
     public String getPrenom() {
         return prenom;

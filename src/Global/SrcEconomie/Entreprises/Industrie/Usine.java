@@ -1,12 +1,15 @@
-package Global.SrcEconomie.Entreprises;
+package Global.SrcEconomie.Entreprises.Industrie;
 
+import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.TypeMarchandise;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Usine extends Entreprise{
+public class Usine extends Entreprise implements Stockage {
     List<Marchandise> entree;
     List<Marchandise> sortie;
     RecetteIndustrie recette;
@@ -92,5 +95,40 @@ public class Usine extends Entreprise{
         {
             finaliserProduction();
         }
+    }
+
+    @Override
+    public Marchandise fournir(TypeMarchandise tm) {
+        List<Marchandise> mt = sortie.stream()
+                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .collect(Collectors.toList());
+        if(mt.size()>0)
+        {
+            Marchandise select = mt.get(0);
+            sortie.remove(select);
+            return select;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public void stocker(Marchandise m) {
+        entree.add(m);
+    }
+
+    @Override
+    public boolean disponible(TypeMarchandise tm) {
+        List<Marchandise> mt = sortie.stream()
+                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .collect(Collectors.toList());
+        return mt.size()>0;
+    }
+
+    @Override
+    public double getPrix(TypeMarchandise tm) {
+        return tm.getPrixFournisseur();
     }
 }

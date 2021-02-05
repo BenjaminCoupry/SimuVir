@@ -1,4 +1,6 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Entreprises.Enseignement;
+
+import Global.SrcEconomie.Habitant;
 
 import java.util.List;
 

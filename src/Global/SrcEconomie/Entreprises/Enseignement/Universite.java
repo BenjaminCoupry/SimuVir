@@ -1,6 +1,6 @@
-package Global.SrcEconomie.Entreprises;
+package Global.SrcEconomie.Entreprises.Enseignement;
 
-import Global.SrcEconomie.Formation;
+import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Habitant;
 import Global.SrcVirus.Individu;
 
