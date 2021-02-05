@@ -1,6 +1,7 @@
 package Global;
 
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
+import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
@@ -16,6 +17,7 @@ public class Monde {
     static List<Stockage> stockages;
     static List<EntrepriseTransport> transporteurs;
     static List<Boutique> boutiques;
+    static List<Poste> postes;
 
     public static List<Virus> getVirusExistants() {
         return virusExistants;
@@ -80,5 +82,13 @@ public class Monde {
 
     public static void setBoutiques(List<Boutique> boutiques) {
         Monde.boutiques = boutiques;
+    }
+
+    public static List<Poste> getPostes() {
+        return postes;
+    }
+
+    public static void setPostes(List<Poste> postes) {
+        Monde.postes = postes;
     }
 }

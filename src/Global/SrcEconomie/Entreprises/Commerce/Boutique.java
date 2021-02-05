@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 public class Boutique extends Entreprise implements Stockage {
     List<Marchandise> stock;
     List<UsageMarchandise> catalogue;
-    //TODO commandes aupres des usines pour remplir le catalogue
-    //TODO pour les livraisons, garder un hashmap pour les livreurs indiquant la marchandise transportee, le lieu de depart et d'arrivee
+    //TODO commandes aupres des usines pour remplir le catalogue tout les n temps
     public boolean peutVendre(TypeMarchandise tm)
     {
         for(Marchandise m : stock)

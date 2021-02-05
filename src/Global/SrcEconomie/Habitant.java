@@ -166,3 +166,5 @@ public class Habitant extends Individu{
         }
     }
 }
+//TODO trouver poste, universite etc
+//TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)
