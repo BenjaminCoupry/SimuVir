@@ -1,5 +1,9 @@
 package Global.SrcEconomie;
 
+import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Poste;
+import Global.SrcEconomie.Entreprises.Universite;
 import Global.SrcVirus.Individu;
 
 import java.util.List;

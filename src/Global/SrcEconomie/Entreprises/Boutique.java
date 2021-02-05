@@ -1,4 +1,8 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Entreprises;
+
+import Global.SrcEconomie.ConstantesEco;
+import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.TypeMarchandise;
 
 import java.util.List;
 

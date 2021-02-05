@@ -1,5 +1,7 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Entreprises;
 
+import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.Habitant;
 import Global.SrcVirus.Lieu;
 
 import java.util.List;

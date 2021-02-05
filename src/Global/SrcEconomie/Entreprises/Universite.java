@@ -1,5 +1,7 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Entreprises;
 
+import Global.SrcEconomie.Formation;
+import Global.SrcEconomie.Habitant;
 import Global.SrcVirus.Individu;
 
 import java.util.HashMap;
