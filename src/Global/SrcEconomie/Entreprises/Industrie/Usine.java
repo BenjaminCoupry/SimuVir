@@ -1,9 +1,12 @@
 package Global.SrcEconomie.Entreprises.Industrie;
 
+import Global.Monde;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcVirus.Fonctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,5 +133,22 @@ public class Usine extends Entreprise implements Stockage {
     @Override
     public double getPrix(TypeMarchandise tm) {
         return tm.getPrixFournisseur();
+    }
+
+    @Override
+    public void passerCommandes()
+    {
+        if(Monde.getTransporteurs().size() >0) {
+            for (UsageMarchandise um : recette.getConsommation()) {
+                List<Marchandise> mt = entree.stream()
+                        .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                        .collect(Collectors.toList());
+                int delta = um.getNbUsage() - mt.size();
+                for (int i = 0; i < delta; i++) {
+                    EntrepriseTransport et = Monde.getTransporteurs().get(Fonctions.r.nextInt(Monde.getTransporteurs().size()));
+                    et.passerCommande(this, um.getTypeMarchandise());
+                }
+            }
+        }
     }
 }

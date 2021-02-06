@@ -2,11 +2,11 @@ package Global.SrcEconomie.Entreprises;
 
 import Global.SrcEconomie.CompteBancaire;
 import Global.SrcEconomie.Habitant;
-import Global.SrcVirus.Lieu;
+import Global.SrcEconomie.LieuPhysique;
 
 import java.util.List;
 
-public class Entreprise extends Lieu {
+public class Entreprise extends LieuPhysique {
     String nom;
     List<Habitant> employes;
     double efficacite;

@@ -8,4 +8,5 @@ public interface Stockage {
     void stocker(Marchandise m);
     boolean disponible(TypeMarchandise tm);
     double getPrix(TypeMarchandise tm);
+    void passerCommandes();
 }

@@ -6,6 +6,7 @@ import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
@@ -24,7 +25,7 @@ public class EntrepriseTransport extends Entreprise {
     {
         for(Poste p : getPostes())
         {
-            if((!livraisons.containsKey(p.getOccupant())) || livraisons.get(p.getOccupant()) == null)
+            if(p.getOccupant()!= null && ((!livraisons.containsKey(p.getOccupant())) || livraisons.get(p.getOccupant()) == null))
             {
                 if(commandes.size()>0)
                 {
@@ -44,9 +45,22 @@ public class EntrepriseTransport extends Entreprise {
                             c.getPaiement().payer(source.getCompteBancaire(), choisi.getPrix(c.getTypeMarchandise()),"Achat via "+getNom());
                         }
                     }
+                    else
+                    {
+                        //Delayer la commande
+                        commandes.remove(0);
+                        commandes.add(c);
+                    }
                 }
             }
-            if(livraisons.containsKey(p.getOccupant()))
+        }
+    }
+
+    public void majLivraisons()
+    {
+        for(Poste p : getPostes())
+        {
+            if(p.getOccupant()!= null && livraisons.containsKey(p.getOccupant()))
             {
                 OrdreTransport ot = livraisons.get(p.getOccupant());
                 if(ot.getStatut().equals(StatutLivraison.FINIE))
@@ -58,14 +72,14 @@ public class EntrepriseTransport extends Entreprise {
                 }
                 if(ot.getStatut().equals(StatutLivraison.LIVRAISON))
                 {
-                    if(((Lieu)ot.getArrivee()).getVisiteurs().contains(p.getOccupant()))
+                    if(((LieuPhysique)ot.getArrivee()).getVisiteurs().contains(p.getOccupant()))
                     {
                         ot.setStatut(StatutLivraison.FINIE);
                     }
                 }
                 if(ot.getStatut().equals(StatutLivraison.RECUPERATION))
                 {
-                    if(((Lieu)ot.getDepart()).getVisiteurs().contains(p.getOccupant()))
+                    if(((LieuPhysique)ot.getDepart()).getVisiteurs().contains(p.getOccupant()))
                     {
                         ot.setStatut(StatutLivraison.LIVRAISON);
                     }
@@ -82,18 +96,18 @@ public class EntrepriseTransport extends Entreprise {
             commandes.add(cmd);
         }
     }
-    public Lieu getObjectif(Habitant hab)
+    public LieuPhysique getObjectif(Habitant hab)
     {
         OrdreTransport ot = livraisons.get(hab);
         if(ot != null)
         {
             if(ot.getStatut().equals(StatutLivraison.RECUPERATION))
             {
-                return (Lieu)ot.getDepart();
+                return (LieuPhysique)ot.getDepart();
             }
             if(ot.getStatut().equals(StatutLivraison.LIVRAISON))
             {
-                return (Lieu)ot.getArrivee();
+                return (LieuPhysique)ot.getArrivee();
             }
             if(ot.getStatut().equals(StatutLivraison.FINIE))
             {
@@ -106,6 +120,7 @@ public class EntrepriseTransport extends Entreprise {
     {
         super.Update(dt);
         traiterCommandes();
+        majLivraisons();
     }
 
 

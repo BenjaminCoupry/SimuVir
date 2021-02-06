@@ -10,6 +10,7 @@ import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
+import Global.SrcEconomie.Logement.Residence;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
 import Global.SrcVirus.Lieu;
@@ -27,8 +28,8 @@ public class Habitant extends Individu{
     List<Marchandise> inventaire;
     Poste poste;
     CompteBancaire compteBancaire;
-    Lieu position;
-    Lieu objectif;
+    LieuPhysique position;
+    LieuPhysique objectif;
     TypeMarchandise volonteAchat;
 
     public String getPrenom() {
@@ -165,6 +166,29 @@ public class Habitant extends Individu{
             objectif = null;
         }
     }
+
+    public void trouverAffectations()
+    {
+        if(residence==null)
+        {
+            List<Residence> res = Monde.trouverResidencesPossibles(this);
+            Residence chosie = res.get(Fonctions.r.nextInt(res.size()));
+            chosie.emmenager(this);
+        }
+        if(poste==null || travail == null)
+        {
+            List<Poste> res = Monde.trouverPostesPossibles(this);
+            Poste chosi = res.get(Fonctions.r.nextInt(res.size()));
+            chosi.recruter(this);
+        }
+        if(universite==null)
+        {
+            List<Universite> res = Monde.trouverUniversitesPossibles(this);
+            Universite chosie = res.get(Fonctions.r.nextInt(res.size()));
+            chosie.inscrire(this);
+        }
+    }
 }
-//TODO trouver poste, universite etc
+//TODO possibilite de mourrir, se desinscrire des potes etc
+//TODO Entreprises de services
 //TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)

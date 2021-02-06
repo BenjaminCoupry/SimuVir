@@ -84,6 +84,7 @@ public class Boutique extends Entreprise implements Stockage {
                 .collect(Collectors.toList());
         return mt.size()>0;
     }
+    @Override
     public void passerCommandes()
     {
         if(Monde.getTransporteurs().size() >0) {
