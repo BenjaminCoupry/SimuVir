@@ -1,8 +1,7 @@
 package Global.SrcEconomie.Entreprises;
 
 import Global.SrcEconomie.CompteBancaire;
-import Global.SrcEconomie.Entreprises.Transport.Stockage;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.Monetaire;
 

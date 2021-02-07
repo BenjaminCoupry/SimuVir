@@ -2,10 +2,9 @@ package Global.SrcEconomie.Logement;
 
 import Global.Monde;
 import Global.SrcEconomie.CompteBancaire;
-import Global.SrcEconomie.Entreprises.Enseignement.Universite;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
-import Global.SrcVirus.Lieu;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +13,7 @@ public class Residence extends LieuPhysique {
     String adresse;
     int places;
     double loyer;
+    List<Marchandise> inventaire;
     CompteBancaire compteProprietaire;
     public boolean peutPostuler(Habitant hab)
     {

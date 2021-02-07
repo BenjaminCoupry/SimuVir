@@ -1,16 +1,13 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
 import Global.Monde;
-import Global.SrcEconomie.CompteBancaire;
-import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
-import Global.SrcVirus.Lieu;
 
 import java.util.HashMap;
 import java.util.LinkedList;

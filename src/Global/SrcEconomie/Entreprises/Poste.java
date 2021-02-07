@@ -1,7 +1,7 @@
 package Global.SrcEconomie.Entreprises;
 
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 
 import java.util.List;
 

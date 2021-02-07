@@ -1,6 +1,6 @@
 package Global.SrcEconomie.Entreprises.Enseignement;
 
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 
 import java.util.List;
 

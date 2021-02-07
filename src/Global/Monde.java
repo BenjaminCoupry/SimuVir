@@ -4,13 +4,13 @@ import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
 import Global.SrcEconomie.Logement.Residence;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcVirus.Virus;
 import PathFinding.*;
 

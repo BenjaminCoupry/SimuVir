@@ -1,0 +1,37 @@
+package Global.SrcEconomie.Vie;
+
+public class BesoinsHabitant {
+    double nourriture;
+    double loisir;
+    double energie;
+    private double clamp(double x)
+    {
+        return Math.max(0,Math.min(100,x));
+    }
+    public void update(double dt, ModeActivite activite)
+    {
+        switch (activite)
+        {
+            case REPOS:
+                nourriture = clamp(nourriture-0.2*dt);
+                loisir = clamp(loisir+0.3*dt);
+                energie = clamp(energie + 1.0*dt);
+                break;
+            case MANGER:
+                nourriture = clamp(nourriture+1*dt);
+                loisir = clamp(loisir+0.1*dt);
+                energie = clamp(energie + 0.2*dt);
+                break;
+            case ATTENDRE:
+                nourriture = clamp(nourriture-0.5*dt);
+                loisir = clamp(loisir-0.2*dt);
+                energie = clamp(energie - 0.2*dt);
+                break;
+            case TRAVAILLER:
+                nourriture = clamp(nourriture-0.9*dt);
+                loisir = clamp(loisir-0.6*dt);
+                energie = clamp(energie -1.0*dt);
+                break;
+        }
+    }
+}

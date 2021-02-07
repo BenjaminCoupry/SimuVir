@@ -1,7 +1,7 @@
 package Global.SrcEconomie.Entreprises.Enseignement;
 
 import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcVirus.Individu;
 
 import java.util.HashMap;

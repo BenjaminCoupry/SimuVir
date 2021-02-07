@@ -7,7 +7,7 @@ import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
-import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 

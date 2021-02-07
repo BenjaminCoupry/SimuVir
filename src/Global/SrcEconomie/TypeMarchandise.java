@@ -1,10 +1,27 @@
 package Global.SrcEconomie;
 
+import Global.SrcEconomie.Entreprises.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Marchandises;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TypeMarchandise {
     double prixFournisseur;
     String name;
+    List<FamillesMarchandises> familles;
+    public static HashMap<Marchandises,TypeMarchandise> mtypesMarchandises;
+
+    public static TypeMarchandise get(Marchandises name)
+    {
+        return mtypesMarchandises.get(name);
+    }
+    public static List<TypeMarchandise> getParFamille(FamillesMarchandises fam)
+    {
+        return mtypesMarchandises.values().stream().filter(m ->m.familles.contains(fam)).collect(Collectors.toList());
+    }
 
     public double getPrixFournisseur() {
         return prixFournisseur;

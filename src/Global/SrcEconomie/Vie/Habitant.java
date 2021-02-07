@@ -1,35 +1,44 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Vie;
 
 import Global.Monde;
+import Global.SrcEconomie.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Marchandises;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
+import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
+import Global.SrcEconomie.Monetaire;
+import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
 import Global.SrcVirus.Lieu;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Habitant extends Individu implements Monetaire{
+public class Habitant extends Individu implements Monetaire {
     String prenom;
     String nom;
-
+    //TODO user l equipement porté
     Residence residence;
     Universite universite;
     List<Connaissance> connaissances;
     List<Marchandise> inventaire;
+    List<Marchandise> inventaireEquipe;
     Poste poste;
     CompteBancaire compteBancaire;
     LieuPhysique position;
     LieuPhysique objectif;
     TypeMarchandise volonteAchat;
+    ModeActivite modeActivite;
     double avancementLieu;
 
     public String getPrenom() {
@@ -121,6 +130,16 @@ public class Habitant extends Individu implements Monetaire{
         }
     }
 
+    //TODO gerer les comportements et maj des ModeActivite en consequence
+    public void choisirComportement()
+    {
+        //TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)
+    }
+    public void comportement()
+    {
+        //TODO actions en coséquences du ModeActivite choisi
+    }
+
     public void partirTravailler()
     {
         Entreprise travail = getTravail();
@@ -136,6 +155,7 @@ public class Habitant extends Individu implements Monetaire{
         {
             objectif = null;
         }
+
     }
     public void rentrerDomicile()
     {
@@ -184,6 +204,39 @@ public class Habitant extends Individu implements Monetaire{
         }
     }
 
+    public void equiper(TypeMarchandise tm)
+    {
+        List<Marchandise> possib = inventaire.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.toList());
+        Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
+        inventaire.remove(choix);
+        inventaireEquipe.add(choix);
+    }
+
+
+    public void Update(double dt)
+    {
+        trouverAffectations();
+        choisirComportement();
+        comportement();
+        userEquipementPorte(dt);
+        deplacer(dt);
+    }
+
+    public void userEquipementPorte(double dt)
+    {
+        List<Marchandise> detruit = new LinkedList<>();
+        for(Marchandise m : inventaireEquipe)
+        {
+            if(!m.user(dt))
+            {
+                detruit.add(m);
+            }
+        }
+        for(Marchandise m : detruit)
+        {
+            inventaireEquipe.remove(m);
+        }
+    }
     public void trouverAffectations()
     {
         if(residence==null)
@@ -224,4 +277,3 @@ public class Habitant extends Individu implements Monetaire{
 
 
 //TODO Entreprises de services
-//TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)
