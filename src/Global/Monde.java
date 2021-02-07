@@ -1,5 +1,6 @@
 package Global;
 
+import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
@@ -9,10 +10,7 @@ import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
-import Global.SrcEconomie.Habitant;
-import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
-import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Virus;
 import PathFinding.*;
 
@@ -30,6 +28,7 @@ public class Monde {
     static double heure;
     static int jour;
     static double dt;
+    static Etat etat;
 
     public static List<Virus> getVirusExistants() {
         return virusExistants;
@@ -149,6 +148,14 @@ public class Monde {
         return postes;
     }
 
+    public static List<Monetaire> getImposables()
+    {
+        List<Monetaire> mon = new LinkedList<>();
+        mon.addAll(getEntreprises());
+        mon.addAll(getHabitants());
+        return mon;
+    }
+
 
 
     public static List<LieuPhysique> getLieuxPhysiques() {
@@ -161,6 +168,10 @@ public class Monde {
 
     public static List<Habitant> getHabitants() {
         return habitants;
+    }
+
+    public static Etat getEtat() {
+        return etat;
     }
 
     public void Update()
@@ -231,7 +242,6 @@ public class Monde {
     public static void setDt(double dt) {
         Monde.dt = dt;
     }
-    //TODO correspondaces lieux/pathfinding
 
     public static void calculerInfoChemins()
     {

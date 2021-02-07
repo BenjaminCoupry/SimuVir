@@ -4,11 +4,12 @@ import Global.SrcEconomie.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
+import Global.SrcEconomie.Monetaire;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Entreprise extends LieuPhysique {
+public class Entreprise extends LieuPhysique implements Monetaire {
     String nom;
     double efficacite;
     CompteBancaire compteBancaire;
@@ -94,6 +95,16 @@ public class Entreprise extends LieuPhysique {
         for(Poste p : getPostes())
         {
             p.renvoyer();
+        }
+    }
+    public void oublier(Habitant hab)
+    {
+        for(Poste p : getPostes())
+        {
+            if(p.getOccupant() == hab)
+            {
+                p.renvoyer();
+            }
         }
     }
 }

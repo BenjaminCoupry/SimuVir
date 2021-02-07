@@ -1,5 +1,7 @@
 package Global.SrcEconomie;
 
+import Global.Monde;
+
 import java.util.List;
 
 public class CompteBancaire {
@@ -23,10 +25,14 @@ public class CompteBancaire {
 
     public void crediter(double valeur, String motif)
     {
-        somme += valeur;
+        double valeurImpot = valeur * Monde.getEtat().getTaxeVente();
+        double valeurReelle = valeur - valeurImpot;
+        somme += valeurReelle ;
         historiqueMotifs.add(motif);
         historiqueSolde.add(somme);
-        historiqueMouvements.add(valeur);
+        historiqueMouvements.add(valeurReelle);
+        Monde.getEtat().incrementerPIB(valeur);
+        Monde.getEtat().getCompteBancaire().crediter(valeurImpot,"TVA "+motif);
     }
     public void debiter(double valeur, String motif)
     {
@@ -36,4 +42,19 @@ public class CompteBancaire {
         historiqueMouvements.add(-valeur);
     }
 
+    public double getSomme() {
+        return somme;
+    }
+
+    public List<String> getHistoriqueMotifs() {
+        return historiqueMotifs;
+    }
+
+    public List<Double> getHistoriqueSolde() {
+        return historiqueSolde;
+    }
+
+    public List<Double> getHistoriqueMouvements() {
+        return historiqueMouvements;
+    }
 }

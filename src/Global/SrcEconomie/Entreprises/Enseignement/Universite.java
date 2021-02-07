@@ -64,6 +64,12 @@ public class Universite extends Entreprise {
             hab.setUniversite(null);
         }
     }
+
+    public void oublier(Habitant hab)
+    {
+        super.oublier(hab);
+        tempsRestantAvantObtention.remove(hab);
+    }
     public List<Habitant> getEtudiants() {
         return new LinkedList<>(tempsRestantAvantObtention.keySet());
     }

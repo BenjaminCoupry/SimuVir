@@ -17,7 +17,7 @@ import Global.SrcVirus.Lieu;
 
 import java.util.List;
 
-public class Habitant extends Individu{
+public class Habitant extends Individu implements Monetaire{
     String prenom;
     String nom;
 
@@ -30,6 +30,7 @@ public class Habitant extends Individu{
     LieuPhysique position;
     LieuPhysique objectif;
     TypeMarchandise volonteAchat;
+    double avancementLieu;
 
     public String getPrenom() {
         return prenom;
@@ -105,6 +106,20 @@ public class Habitant extends Individu{
         this.inventaire = inventaire;
     }
 
+    public void deplacer(double dt)
+    {
+        avancementLieu+= dt;
+        if(avancementLieu> position.getTempsTraversee())
+        {
+            avancementLieu=0;
+            if(objectif != null && objectif != position) {
+                List<LieuPhysique> next = position.getChemin(objectif);
+                if (next.size() > 1) {
+                    position = next.get(1);
+                }
+            }
+        }
+    }
 
     public void partirTravailler()
     {
@@ -190,7 +205,23 @@ public class Habitant extends Individu{
             chosie.inscrire(this);
         }
     }
+    public void supprimer()
+    {
+        if(poste != null)
+        {
+            Entreprise e = poste.getEntreprise();
+            if(e!=null)
+            {
+                e.oublier(this);
+            }
+        }
+        if(universite != null)
+        {
+            universite.oublier(this);
+        }
+    }
 }
-//TODO possibilite de mourrir, = supprimer()
+
+
 //TODO Entreprises de services
 //TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)

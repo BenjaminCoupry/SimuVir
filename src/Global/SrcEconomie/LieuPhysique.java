@@ -13,12 +13,22 @@ import java.util.List;
 public class LieuPhysique extends Lieu {
     List<LieuPhysique> adjacents;
     Place place;
+    Hitbox hitbox;
     InfoChemin infoChemin;
+    double tempsTraversee;
 
     public List<LieuPhysique> getAdjacents() {
         return adjacents;
     }
 
+    public double getX()
+    {
+        return place.getX();
+    }
+    public double getY()
+    {
+        return place.getY();
+    }
     public void setAdjacents(List<LieuPhysique> adjacents) {
         this.adjacents = adjacents;
     }
@@ -58,4 +68,7 @@ public class LieuPhysique extends Lieu {
         }
     }
 
+    public double getTempsTraversee() {
+        return tempsTraversee;
+    }
 }

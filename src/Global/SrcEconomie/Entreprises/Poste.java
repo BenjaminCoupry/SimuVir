@@ -11,6 +11,7 @@ public class Poste {
     List<Connaissance> connaissancesRequises;
     Habitant occupant;
     Entreprise entreprise;
+    HoraireTravail horaires;
 
     public boolean peutPostuler(Habitant hab)
     {
@@ -78,5 +79,9 @@ public class Poste {
 
     public Entreprise getEntreprise() {
         return entreprise;
+    }
+
+    public HoraireTravail getHoraires() {
+        return horaires;
     }
 }

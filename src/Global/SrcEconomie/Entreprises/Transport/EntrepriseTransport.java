@@ -142,6 +142,12 @@ public class EntrepriseTransport extends Entreprise {
             inventairesLivreurs.put(h,null);
         }
     }
+    public void oublier(Habitant hab)
+    {
+        super.oublier(hab);
+        inventairesLivreurs.remove(hab);
+        livraisons.remove(hab);
+    }
 
 
 }
