@@ -5,12 +5,12 @@ import Global.SrcEconomie.Habitant;
 import Global.SrcVirus.Individu;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Universite extends Entreprise {
     Formation formation;
     HashMap<Habitant,Double> tempsRestantAvantObtention;
-    List<Habitant> etudiants;
     int places;
 
     public void Update(double dt)
@@ -36,7 +36,6 @@ public class Universite extends Entreprise {
     public void delivrerDiplome(Habitant hab)
     {
         tempsRestantAvantObtention.remove(hab);
-        etudiants.remove(hab);
         formation.donner(hab);
         if(hab.getUniversite() == this)
         {
@@ -45,17 +44,27 @@ public class Universite extends Entreprise {
     }
     public boolean peutPostuler(Habitant hab)
     {
-        return places>etudiants.size() && hab.getUniversite() ==null && formation.estApte(hab);
+        List<Habitant> etudiants = getEtudiants();
+
+        return (!etudiants.contains(hab))&&places>etudiants.size() && hab.getUniversite() ==null && formation.estApte(hab);
     }
     public void inscrire(Habitant hab)
     {
         if(peutPostuler(hab)) {
             hab.setUniversite(this);
             tempsRestantAvantObtention.putIfAbsent(hab,formation.getTempsObtention());
-            if(!etudiants.contains(hab))
-            {
-                etudiants.add(hab);
-            }
         }
+    }
+
+    public void supprimer()
+    {
+        super.supprimer();
+        for(Habitant hab : getEtudiants())
+        {
+            hab.setUniversite(null);
+        }
+    }
+    public List<Habitant> getEtudiants() {
+        return new LinkedList<>(tempsRestantAvantObtention.keySet());
     }
 }

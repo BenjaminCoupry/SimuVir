@@ -1,14 +1,15 @@
 package Global.SrcEconomie.Entreprises;
 
 import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Entreprise extends LieuPhysique {
     String nom;
-    List<Habitant> employes;
     double efficacite;
     CompteBancaire compteBancaire;
     List<Poste> postes;
@@ -55,12 +56,13 @@ public class Entreprise extends LieuPhysique {
     }
 
     public List<Habitant> getEmployes() {
-        return employes;
+        List<Habitant> mt = getPostes().stream()
+                    .filter(res -> res.getOccupant() != null)
+                    .map(l -> l.getOccupant())
+                    .collect(Collectors.toList());
+            return mt;
     }
 
-    public void setEmployes(List<Habitant> employes) {
-        this.employes = employes;
-    }
 
     public double getEfficacite() {
         return efficacite;
@@ -85,5 +87,13 @@ public class Entreprise extends LieuPhysique {
 
     public void setCompteBancaire(CompteBancaire compteBancaire) {
         this.compteBancaire = compteBancaire;
+    }
+    public void supprimer()
+    {
+        super.supprimer();
+        for(Poste p : getPostes())
+        {
+            p.renvoyer();
+        }
     }
 }

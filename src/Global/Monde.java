@@ -2,6 +2,7 @@ package Global;
 
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
+import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
@@ -9,23 +10,23 @@ import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
 import Global.SrcEconomie.Habitant;
+import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Virus;
+import PathFinding.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Monde {
     static List<Virus> virusExistants;
-    static List<Stockage> stockages;
-    static List<EntrepriseTransport> transporteurs;
-    static List<Boutique> boutiques;
-    static List<Residence> residences;
-    static List<Universite> universites;
-    static List<Usine> usines;
-    static List<Poste> postes;
+    static List<LieuPhysique> lieuxPhysiques;
+    static HashMap<Place,LieuPhysique> lieuPlace;
+    static List<Habitant> habitants;
     static double heure;
     static int jour;
     static double dt;
@@ -46,7 +47,7 @@ public class Monde {
     public static List<Stockage> trouverDisponibilites(TypeMarchandise tm, TypeDisponibilite dispo)
     {
         List<Stockage> res = new ArrayList<>();
-        for(Stockage sto : stockages)
+        for(Stockage sto : getStockages())
         {
             if(dispo.equals(TypeDisponibilite.MAGASIN))
             {
@@ -96,43 +97,70 @@ public class Monde {
     }
 
     public static List<Stockage> getStockages() {
-        return stockages;
+        List<Stockage> mt = getLieuxPhysiques().stream()
+                .filter(res -> res instanceof Stockage)
+                .map(l -> (Stockage)l)
+                .collect(Collectors.toList());
+        return mt;
+    }
+    public static List<Universite> getUniversites() {
+        List<Universite> mt = getEntreprises().stream()
+                .filter(res -> res instanceof Universite)
+                .map(l -> (Universite)l)
+                .collect(Collectors.toList());
+        return mt;
     }
 
-    public static void setStockages(List<Stockage> stockages) {
-        Monde.stockages = stockages;
+    public static List<Entreprise> getEntreprises() {
+        List<Entreprise> mt = getLieuxPhysiques().stream()
+                .filter(res -> res instanceof Entreprise)
+                .map(l -> (Entreprise)l)
+                .collect(Collectors.toList());
+        return mt;
     }
+
 
     public static List<EntrepriseTransport> getTransporteurs() {
-        return transporteurs;
+        List<EntrepriseTransport> mt = getEntreprises().stream()
+                .filter(res -> res instanceof EntrepriseTransport)
+                .map(l -> (EntrepriseTransport)l)
+                .collect(Collectors.toList());
+        return mt;
     }
 
-    public static void setTransporteurs(List<EntrepriseTransport> transporteurs) {
-        Monde.transporteurs = transporteurs;
-    }
 
     public static List<Boutique> getBoutiques() {
-        return boutiques;
+
+        List<Boutique> mt = getEntreprises().stream()
+                .filter(res -> res instanceof Boutique)
+                .map(l -> (Boutique)l)
+                .collect(Collectors.toList());
+        return mt;
     }
 
-    public static void setBoutiques(List<Boutique> boutiques) {
-        Monde.boutiques = boutiques;
-    }
 
     public static List<Poste> getPostes() {
+        List<Entreprise> mt = getEntreprises();
+        List<Poste> postes = new LinkedList<>();
+        for(Entreprise e : mt)
+        {
+            postes.addAll(e.getPostes());
+        }
         return postes;
     }
 
-    public static void setPostes(List<Poste> postes) {
-        Monde.postes = postes;
+
+
+    public static List<LieuPhysique> getLieuxPhysiques() {
+        return lieuxPhysiques;
     }
 
-    public static List<Universite> getUniversites() {
-        return universites;
+    public static  HashMap<Place, LieuPhysique> getLieuPlace() {
+        return lieuPlace;
     }
 
-    public static void setUniversites(List<Universite> universites) {
-        Monde.universites = universites;
+    public static List<Habitant> getHabitants() {
+        return habitants;
     }
 
     public void Update()
@@ -162,20 +190,23 @@ public class Monde {
         }
     }
     public static List<Residence> getResidences() {
-        return residences;
+        List<Residence> mt = getLieuxPhysiques().stream()
+                .filter(res -> res instanceof Residence)
+                .map(l -> (Residence)l)
+                .collect(Collectors.toList());
+        return mt;
     }
 
-    public static void setResidences(List<Residence> residences) {
-        Monde.residences = residences;
-    }
+
 
     public static List<Usine> getUsines() {
-        return usines;
+        List<Usine> mt = getEntreprises().stream()
+                .filter(res -> res instanceof Usine)
+                .map(l -> (Usine)l)
+                .collect(Collectors.toList());
+        return mt;
     }
 
-    public static void setUsines(List<Usine> usines) {
-        Monde.usines = usines;
-    }
 
     public static double getHeure() {
         return heure;
@@ -201,4 +232,26 @@ public class Monde {
         Monde.dt = dt;
     }
     //TODO correspondaces lieux/pathfinding
+
+    public static void calculerInfoChemins()
+    {
+        List<Place> placelieu = new LinkedList<>();
+        HashMap<Place,LieuPhysique> lieuPlace_ = new HashMap<>();
+        List<ArcPhysique> arcs = new LinkedList<>();
+        for(LieuPhysique l : lieuxPhysiques)
+        {
+            placelieu.add(l.getPlace());
+            lieuPlace_.put(l.getPlace(),l);
+            for(LieuPhysique l2 : l.getAdjacents()) {
+                ArcPhysique arc = new ArcPhysique(l.getPlace(),l2.getPlace() , 1);
+                arcs.add(arc);
+            }
+        }
+        for(LieuPhysique l : lieuxPhysiques)
+        {
+            InfoChemin ic = PathFinder.calculerDistances(arcs,l.getPlace());
+            l.setInfoChemin(ic);
+        }
+        lieuPlace_ = lieuPlace_;
+    }
 }

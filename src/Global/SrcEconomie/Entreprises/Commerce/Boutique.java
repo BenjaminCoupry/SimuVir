@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class Boutique extends Entreprise implements Stockage {
     List<Marchandise> stock;
     List<UsageMarchandise> catalogue;
-    //TODO commandes aupres des usines pour remplir le catalogue tout les n temps
     public boolean peutVendre(TypeMarchandise tm)
     {
         for(Marchandise m : stock)
@@ -98,6 +97,15 @@ public class Boutique extends Entreprise implements Stockage {
                     et.passerCommande(this, um.getTypeMarchandise());
                 }
             }
+        }
+    }
+    public void supprimer()
+    {
+        super.supprimer();
+        List<EntrepriseTransport> et = Monde.getTransporteurs();
+        for(EntrepriseTransport e : et)
+        {
+            e.oublier(this);
         }
     }
 }

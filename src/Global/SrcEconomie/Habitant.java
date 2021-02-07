@@ -22,7 +22,6 @@ public class Habitant extends Individu{
     String nom;
 
     Residence residence;
-    Entreprise travail;
     Universite universite;
     List<Connaissance> connaissances;
     List<Marchandise> inventaire;
@@ -57,11 +56,13 @@ public class Habitant extends Individu{
     }
 
     public Entreprise getTravail() {
-        return travail;
-    }
-
-    public void setTravail(Entreprise travail) {
-        this.travail = travail;
+        if(poste == null)
+        {
+            return null;
+        }else
+        {
+            return poste.getEntreprise();
+        }
     }
 
     public Universite getUniversite() {
@@ -107,6 +108,7 @@ public class Habitant extends Individu{
 
     public void partirTravailler()
     {
+        Entreprise travail = getTravail();
         if(travail != null) {
             if(travail instanceof EntrepriseTransport)
             {
@@ -175,7 +177,7 @@ public class Habitant extends Individu{
             Residence chosie = res.get(Fonctions.r.nextInt(res.size()));
             chosie.emmenager(this);
         }
-        if(poste==null || travail == null)
+        if(poste==null || getTravail() == null)
         {
             List<Poste> res = Monde.trouverPostesPossibles(this);
             Poste chosi = res.get(Fonctions.r.nextInt(res.size()));
@@ -189,6 +191,6 @@ public class Habitant extends Individu{
         }
     }
 }
-//TODO possibilite de mourrir, se desinscrire des potes etc
+//TODO possibilite de mourrir, = supprimer()
 //TODO Entreprises de services
 //TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="PathFinding">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../PathFinding/out/artifacts/PathFinding_jar/PathFinding.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

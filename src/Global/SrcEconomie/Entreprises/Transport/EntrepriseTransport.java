@@ -2,6 +2,7 @@ package Global.SrcEconomie.Entreprises.Transport;
 
 import Global.Monde;
 import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
@@ -12,7 +13,9 @@ import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntrepriseTransport extends Entreprise {
 
@@ -63,25 +66,22 @@ public class EntrepriseTransport extends Entreprise {
             if(p.getOccupant()!= null && livraisons.containsKey(p.getOccupant()))
             {
                 OrdreTransport ot = livraisons.get(p.getOccupant());
-                if(ot.getStatut().equals(StatutLivraison.FINIE))
-                {
-                    Marchandise m = inventairesLivreurs.get(p.getOccupant());
-                    ot.getArrivee().stocker(m);
-                    inventairesLivreurs.put(p.getOccupant(),null);
-                    livraisons.put(p.getOccupant(),null);
-                }
-                if(ot.getStatut().equals(StatutLivraison.LIVRAISON))
-                {
-                    if(((LieuPhysique)ot.getArrivee()).getVisiteurs().contains(p.getOccupant()))
-                    {
-                        ot.setStatut(StatutLivraison.FINIE);
+                if(ot!=null) {
+                    if (ot.getStatut().equals(StatutLivraison.FINIE)) {
+                        Marchandise m = inventairesLivreurs.get(p.getOccupant());
+                        ot.getArrivee().stocker(m);
+                        inventairesLivreurs.put(p.getOccupant(), null);
+                        livraisons.put(p.getOccupant(), null);
                     }
-                }
-                if(ot.getStatut().equals(StatutLivraison.RECUPERATION))
-                {
-                    if(((LieuPhysique)ot.getDepart()).getVisiteurs().contains(p.getOccupant()))
-                    {
-                        ot.setStatut(StatutLivraison.LIVRAISON);
+                    if (ot.getStatut().equals(StatutLivraison.LIVRAISON)) {
+                        if (((LieuPhysique) ot.getArrivee()).getVisiteurs().contains(p.getOccupant())) {
+                            ot.setStatut(StatutLivraison.FINIE);
+                        }
+                    }
+                    if (ot.getStatut().equals(StatutLivraison.RECUPERATION)) {
+                        if (((LieuPhysique) ot.getDepart()).getVisiteurs().contains(p.getOccupant())) {
+                            ot.setStatut(StatutLivraison.LIVRAISON);
+                        }
                     }
                 }
             }
@@ -121,6 +121,26 @@ public class EntrepriseTransport extends Entreprise {
         super.Update(dt);
         traiterCommandes();
         majLivraisons();
+    }
+    public void oublier(Stockage stockage)
+    {
+        commandes = commandes.stream()
+                .filter(c -> ! c.getDestination().equals(stockage))
+                .collect(Collectors.toList());
+        List<Habitant> toRemove = new LinkedList<>();
+        for(Habitant h : livraisons.keySet())
+        {
+            OrdreTransport ot = livraisons.get(h);
+            if(ot.getDepart().equals(stockage) || ot.getArrivee().equals(stockage))
+            {
+                toRemove.add(h);
+            }
+        }
+        for(Habitant h: toRemove)
+        {
+            livraisons.remove(h);
+            inventairesLivreurs.put(h,null);
+        }
     }
 
 

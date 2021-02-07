@@ -151,4 +151,14 @@ public class Usine extends Entreprise implements Stockage {
             }
         }
     }
+
+    public void supprimer()
+    {
+        super.supprimer();
+        List<EntrepriseTransport> et = Monde.getTransporteurs();
+        for(EntrepriseTransport e : et)
+        {
+            e.oublier(this);
+        }
+    }
 }

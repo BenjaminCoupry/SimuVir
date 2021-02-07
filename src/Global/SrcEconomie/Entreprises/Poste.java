@@ -64,12 +64,19 @@ public class Poste {
     {
         if(peutPostuler(hab)) {
             hab.setPoste(this);
-            hab.setTravail(entreprise);
             occupant = hab;
-            if(! entreprise.getEmployes().contains(hab))
-            {
-                entreprise.getEmployes().add(hab);
-            }
         }
+    }
+    public void renvoyer()
+    {
+        if(occupant !=null)
+        {
+            occupant.setPoste(null);
+            occupant = null;
+        }
+    }
+
+    public Entreprise getEntreprise() {
+        return entreprise;
     }
 }
