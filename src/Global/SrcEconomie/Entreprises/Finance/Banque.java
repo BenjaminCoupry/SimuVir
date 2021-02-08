@@ -18,6 +18,8 @@ public class Banque extends Entreprise implements DtListener, JourListener {
 
 
     HashMap<Monetaire, CompteBancaire> comptes;
+    List<Double> efficacites;
+    double efficaciteMoyenne;
     double tauxInteret;
     double frais;
 
@@ -25,12 +27,21 @@ public class Banque extends Entreprise implements DtListener, JourListener {
     public void Update(double dt)
     {
         super.Update(dt);
+        efficacites.add(getEfficacite());
     }
     @Override
     public void jourPasse(double dt)
     {
         super.jourPasse(dt);
-
+        if(efficacites.size()>0) {
+            efficaciteMoyenne = efficacites.stream().collect(Collectors.summingDouble(i -> i))/efficacites.size();
+        }else
+        {
+            efficaciteMoyenne =0;
+        }
+        efficacites = new LinkedList<>();
+        verserInterets();
+        preleverFrais();
     }
 
     public void preleverFrais()
@@ -43,10 +54,11 @@ public class Banque extends Entreprise implements DtListener, JourListener {
     }
     public void verserInterets()
     {
+
         for(CompteBancaire cb : comptes.values())
         {
             double montant = cb.getSomme();
-            double interets = getEfficacite()*getTauxInteret()*montant;
+            double interets = getEfficaciteMoyenne()*getTauxInteret()*montant;
             if(interets>0) {
                 cb.crediter(interets,"Interets "+getNom());
             }
@@ -79,5 +91,9 @@ public class Banque extends Entreprise implements DtListener, JourListener {
 
     public double getTauxInteret() {
         return tauxInteret;
+    }
+
+    public double getEfficaciteMoyenne() {
+        return efficaciteMoyenne;
     }
 }
