@@ -208,7 +208,7 @@ public class Monde {
         return mt;
     }
 
-    Route getRoutePlusProche(Point2D comparaison)
+    public static Route getRoutePlusProche(Point2D comparaison)
     {
         List<Route> routes = getRoutes();
         if(routes.size()>0) {
