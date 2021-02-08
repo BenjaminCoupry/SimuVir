@@ -19,6 +19,7 @@ import Global.SrcVirus.Individu;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Habitant extends Individu implements Monetaire, JourListener,DtListener {
@@ -39,6 +40,31 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     ModeActivite modeActiviteVoulu;
     double avancementLieu;
     BesoinsHabitant besoins;
+
+    public Habitant(Function<Double, Double> probaMortNaturelle, double age,String prenom,String nomFamille) {
+        super(probaMortNaturelle, age);
+        this.prenom = prenom;
+        this.nomFamille = nomFamille;
+        residence = null;
+        universite =null;
+        banque = null;
+        poste = null;
+        modeActiviteReel = ModeActivite.ATTENDRE;
+        modeActiviteVoulu = ModeActivite.ATTENDRE;
+        avancementLieu =0;
+        besoins = new BesoinsHabitant();
+        volonteAchat = null;
+        compteBancaire = new CompteBancaire(0);
+        objectif = null;
+        connaissances = new LinkedList<>();
+        inventaire = new LinkedList<>();
+        inventaireEquipe = new LinkedList<>();
+
+    }
+    public void apprendre(Connaissance c)
+    {
+        connaissances.add(c);
+    }
 
     public String getPrenom() {
         return prenom;
@@ -104,10 +130,16 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
             if(objectif != null && objectif != position) {
                 List<LieuPhysique> next = position.getChemin(objectif);
                 if (next.size() > 1) {
-                    position = next.get(1);
+                    entrerLieu( next.get(1));
                 }
             }
         }
+    }
+    public void entrerLieu(LieuPhysique cible)
+    {
+        position.getVisiteurs().remove(this);
+        position =cible;
+        cible.getVisiteurs().add(this);
     }
 
 

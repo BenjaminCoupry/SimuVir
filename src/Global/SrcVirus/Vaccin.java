@@ -7,6 +7,11 @@ public class Vaccin {
     List<Virus> cibles;
     double qteInitiale;
 
+    public Vaccin(List<Virus> cibles, double qteInitiale) {
+        this.cibles = cibles;
+        this.qteInitiale = qteInitiale;
+    }
+
     public List<Virus> getCibles() {
         return cibles;
     }

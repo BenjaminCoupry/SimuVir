@@ -15,4 +15,9 @@ public class HitboxCercle implements Hitbox{
     public boolean contact(double x, double y) {
         return Math.sqrt(Math.pow(x-x0,2)+Math.pow(y-y0,2))<r;
     }
+
+    @Override
+    public double getSurface() {
+        return Math.PI*r*r;
+    }
 }

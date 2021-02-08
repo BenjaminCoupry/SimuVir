@@ -1,5 +1,6 @@
 package Global.SrcVirus;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Lieu {
@@ -7,6 +8,13 @@ public class Lieu {
     double surface;
     double temperatureMouvement;
     List<Individu> visiteurs;
+
+    public Lieu(double modificateurTransmission, double surface, double temperatureMouvement) {
+        this.modificateurTransmission = modificateurTransmission;
+        this.surface = surface;
+        this.temperatureMouvement = temperatureMouvement;
+        visiteurs = new LinkedList<>();
+    }
 
     public double getModificateurTransmission() {
         return modificateurTransmission;

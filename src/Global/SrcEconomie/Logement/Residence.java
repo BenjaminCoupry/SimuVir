@@ -1,6 +1,7 @@
 package Global.SrcEconomie.Logement;
 
 import Global.Monde;
+import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
 import Global.SrcEconomie.Entreprises.Marchandise;
@@ -22,7 +23,7 @@ public class Residence extends LieuPhysique implements JourListener {
 
     public Residence(Hitbox hitbox, double tempsTraversee, double x, double y, int places, double loyer,
                      String adresse, Monetaire proprietaire) {
-        super(hitbox, tempsTraversee, x, y);
+        super(hitbox, tempsTraversee, x, y, ConstantesEco.coeffTransmissionLogement);
         inventaire = new LinkedList<>();
         this.places = places;
         this.loyer = loyer;

@@ -7,6 +7,14 @@ public class TestVirus {
     double probaFauxPositif;
     double probaFauxNegatif;
 
+    public TestVirus(TypeTest type, String familleCible, double sensibilite, double probaFauxPositif, double probaFauxNegatif) {
+        this.type = type;
+        this.familleCible = familleCible;
+        this.sensibilite = sensibilite;
+        this.probaFauxPositif = probaFauxPositif;
+        this.probaFauxNegatif = probaFauxNegatif;
+    }
+
     public TypeTest getType() {
         return type;
     }

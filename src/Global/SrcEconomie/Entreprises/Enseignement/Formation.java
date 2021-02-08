@@ -14,7 +14,7 @@ public class Formation {
         {
             if(!hab.getConnaissances().contains(c))
             {
-                hab.getConnaissances().add(c);
+                hab.apprendre(c);
             }
         }
     }

@@ -17,6 +17,16 @@ public class Individu {
     double soins;
     double protectionEmission;
 
+    public Individu(Function<Double, Double> probaMortNaturelle, double age) {
+        this.probaMortNaturelle = probaMortNaturelle;
+        this.age = age;
+        this.mort = false;
+        this.soins =0;
+        this.protectionEmission=0;
+        this.immunites = new HashMap<>();
+        this.infections = new HashMap<>();
+    }
+
     public double getSoins() {
         return soins;
     }

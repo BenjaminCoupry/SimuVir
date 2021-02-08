@@ -1,6 +1,7 @@
 package Global.SrcEconomie.Hitboxes;
 
 import Global.Monde;
+import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.JourListener;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
@@ -18,7 +19,8 @@ public class LieuPhysique extends Lieu implements JourListener {
     InfoChemin infoChemin;
     double tempsTraversee;
 
-    public LieuPhysique(Hitbox hitbox, double tempsTraversee, double x, double y) {
+    public LieuPhysique(Hitbox hitbox, double tempsTraversee, double x, double y, double modificateurTransmission) {
+        super(modificateurTransmission, hitbox.getSurface(), ConstantesEco.temperatureMouvement);
         this.hitbox = hitbox;
         this.tempsTraversee = tempsTraversee;
         place = new Place("place"+Fonctions.getUID(),x,y);

@@ -17,7 +17,7 @@ public class Entreprise extends LieuPhysique implements Monetaire, DtListener, J
     List<Poste> postes;
 
     public Entreprise(Hitbox hitbox, double tempsTraversee, double x, double y) {
-        super(hitbox, tempsTraversee, x, y);
+        super(hitbox, tempsTraversee, x, y,ConstantesEco.coeffTransmissionEntreprise);
         efficacite = 0;
         this.nom = nom;
         postes = new LinkedList<>();
