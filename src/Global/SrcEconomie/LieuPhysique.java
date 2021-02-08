@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LieuPhysique extends Lieu {
+public class LieuPhysique extends Lieu implements JourListener {
     List<LieuPhysique> adjacents;
     Place place;
     Hitbox hitbox;
@@ -70,5 +70,10 @@ public class LieuPhysique extends Lieu {
 
     public double getTempsTraversee() {
         return tempsTraversee;
+    }
+
+    @Override
+    public void jourPasse(double dt) {
+        super.transmettre(dt);
     }
 }

@@ -94,6 +94,11 @@ public class Individu {
             }
         }
     }
+    public void Update(double dt)
+    {
+        UpdateInfections(dt);
+        //TODO completer
+    }
 
     public void Vacciner(Vaccin vaccin)
     {

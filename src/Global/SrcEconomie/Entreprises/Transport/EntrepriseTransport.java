@@ -1,9 +1,11 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
 import Global.Monde;
+import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
+import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.TypeMarchandise;
@@ -14,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntrepriseTransport extends Entreprise {
+public class EntrepriseTransport extends Entreprise implements DtListener, JourListener {
 
     List<Commande> commandes;
     HashMap<Habitant, Marchandise> inventairesLivreurs;

@@ -25,7 +25,7 @@ public class CompteBancaire {
 
     public void crediter(double valeur, String motif)
     {
-        double valeurImpot = valeur * Monde.getEtat().getTaxeVente();
+        double valeurImpot = valeur * Monde.getEtat().getTaxeVente().apply(valeur);
         double valeurReelle = valeur - valeurImpot;
         somme += valeurReelle ;
         historiqueMotifs.add(motif);

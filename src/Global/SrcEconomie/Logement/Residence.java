@@ -3,13 +3,14 @@ package Global.SrcEconomie.Logement;
 import Global.Monde;
 import Global.SrcEconomie.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.LieuPhysique;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Residence extends LieuPhysique {
+public class Residence extends LieuPhysique implements JourListener {
     String adresse;
     int places;
     double loyer;
@@ -55,5 +56,10 @@ public class Residence extends LieuPhysique {
                 .filter(res -> res.getResidence() == this)
                 .collect(Collectors.toList());
         return mt;
+    }
+
+    @Override
+    public void jourPasse(double dt) {
+        payerLoyers();
     }
 }

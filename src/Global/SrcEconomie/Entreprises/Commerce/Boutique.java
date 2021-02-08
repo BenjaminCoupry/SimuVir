@@ -2,11 +2,13 @@ package Global.SrcEconomie.Entreprises.Commerce;
 
 import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
+import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
+import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
@@ -14,7 +16,7 @@ import Global.SrcVirus.Fonctions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Boutique extends Entreprise implements Stockage {
+public class Boutique extends Entreprise implements Stockage, DtListener, JourListener {
     List<Marchandise> stock;
     List<UsageMarchandise> catalogue;
     public boolean peutVendre(TypeMarchandise tm)
@@ -98,6 +100,13 @@ public class Boutique extends Entreprise implements Stockage {
                 }
             }
         }
+    }
+
+    @Override
+    public void jourPasse(double dt)
+    {
+        super.jourPasse(dt);
+        passerCommandes();
     }
     public void supprimer()
     {

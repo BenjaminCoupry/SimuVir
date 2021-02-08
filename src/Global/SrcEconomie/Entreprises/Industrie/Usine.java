@@ -1,10 +1,12 @@
 package Global.SrcEconomie.Entreprises.Industrie;
 
 import Global.Monde;
+import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
+import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Usine extends Entreprise implements Stockage {
+public class Usine extends Entreprise implements Stockage, DtListener, JourListener {
     List<Marchandise> entree;
     List<Marchandise> sortie;
     RecetteIndustrie recette;
@@ -150,6 +152,13 @@ public class Usine extends Entreprise implements Stockage {
                 }
             }
         }
+    }
+
+    @Override
+    public void jourPasse(double dt)
+    {
+        super.jourPasse(dt);
+        passerCommandes();
     }
 
     public void supprimer()

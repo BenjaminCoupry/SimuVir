@@ -1,35 +1,29 @@
 package Global.SrcEconomie.Vie;
 
 import Global.Monde;
-import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.*;
+import Global.SrcEconomie.Entreprises.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
-import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.Entreprises.Marchandise;
-import Global.SrcEconomie.Entreprises.Marchandises;
-import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
+import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
-import Global.SrcEconomie.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
-import Global.SrcEconomie.Monetaire;
-import Global.SrcEconomie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
-import Global.SrcVirus.Lieu;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Habitant extends Individu implements Monetaire {
+public class Habitant extends Individu implements Monetaire, JourListener,DtListener {
     String prenom;
-    String nom;
-    //TODO user l equipement porté
+    String nomFamille;
     Residence residence;
     Universite universite;
+    Banque banque;
     List<Connaissance> connaissances;
     List<Marchandise> inventaire;
     List<Marchandise> inventaireEquipe;
@@ -38,23 +32,17 @@ public class Habitant extends Individu implements Monetaire {
     LieuPhysique position;
     LieuPhysique objectif;
     TypeMarchandise volonteAchat;
-    ModeActivite modeActivite;
+    ModeActivite modeActiviteReel;
+    ModeActivite modeActiviteVoulu;
     double avancementLieu;
+    BesoinsHabitant besoins;
 
     public String getPrenom() {
         return prenom;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
     public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
+        return getPrenom()+" "+getNomFamille();
     }
 
     public Residence getResidence() {
@@ -87,10 +75,6 @@ public class Habitant extends Individu implements Monetaire {
         return connaissances;
     }
 
-    public void setConnaissances(List<Connaissance> connaissances) {
-        this.connaissances = connaissances;
-    }
-
     public Poste getPoste() {
         return poste;
     }
@@ -103,17 +87,10 @@ public class Habitant extends Individu implements Monetaire {
         return compteBancaire;
     }
 
-    public void setCompteBancaire(CompteBancaire compteBancaire) {
-        this.compteBancaire = compteBancaire;
-    }
-
     public List<Marchandise> getInventaire() {
         return inventaire;
     }
 
-    public void setInventaire(List<Marchandise> inventaire) {
-        this.inventaire = inventaire;
-    }
 
     public void deplacer(double dt)
     {
@@ -130,20 +107,79 @@ public class Habitant extends Individu implements Monetaire {
         }
     }
 
-    //TODO gerer les comportements et maj des ModeActivite en consequence
-    public void choisirComportement()
+
+    public ModeActivite choisirComportement()
     {
-        //TODO trouver les envies, les objectifs, se deplacer etc (fonction de l'heure)
+        //Besoin vital
+        if(besoins.affame())
+        {
+
+            if (peutEquiper(FamillesMarchandises.ALIMENTAIRE) || estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
+                return ModeActivite.MANGER;
+            }
+            else
+            {
+                if (volonteAchat == null || !(volonteAchat.getFamilles().contains(FamillesMarchandises.ALIMENTAIRE))) {
+                    List<TypeMarchandise> nourriture = TypeMarchandise.getParFamille(FamillesMarchandises.ALIMENTAIRE);
+                    TypeMarchandise tm = nourriture.get(Fonctions.r.nextInt(nourriture.size()));
+                    volonteAchat = tm;
+                }
+                return ModeActivite.ACHETER;
+            }
+        }
+        if(besoins.fatigue())
+        {
+            return ModeActivite.REPOS;
+        }
+        if(besoins.triste())
+        {
+            return ModeActivite.VISITER;
+        }
+
+        //besoins vitaux satisfaits
+
+        if(getPoste()!= null && getPoste().getHoraires().doitTravailler())
+        {
+            return ModeActivite.TRAVAILLER;
+        }else
+        {
+            return ModeActivite.ETUDIER;
+        }
     }
     public void comportement()
     {
-        //TODO actions en coséquences du ModeActivite choisi
+        switch (modeActiviteVoulu)
+        {
+            case REPOS:
+                rentrerDomicile();
+                break;
+            case MANGER:
+                manger();
+                break;
+            case ATTENDRE:
+                attendre();
+                break;
+            case VISITER:
+                partirVisiter();
+                break;
+            case TRAVAILLER:
+                partirTravailler();
+                break;
+            case ETUDIER:
+                partirEtudier();
+                break;
+            case ACHETER:
+                partirAcheter();
+                break;
+        }
     }
 
     public void partirTravailler()
     {
+
         Entreprise travail = getTravail();
-        if(travail != null) {
+        if(travail != null && getPoste().getHoraires().doitTravailler()) {
+            modeActiviteReel = ModeActivite.TRAVAILLER;
             if(travail instanceof EntrepriseTransport)
             {
                 objectif = ((EntrepriseTransport) travail).getObjectif(this);
@@ -153,26 +189,28 @@ public class Habitant extends Individu implements Monetaire {
             }
         }else
         {
-            objectif = null;
+            attendre();
         }
 
     }
     public void rentrerDomicile()
     {
         if(residence != null) {
+            modeActiviteReel = ModeActivite.REPOS;
             objectif = residence;
         }else
         {
-            objectif = null;
+            attendre();
         }
     }
     public void partirEtudier()
     {
         if(universite != null) {
+            modeActiviteReel = ModeActivite.ETUDIER;
             objectif = universite;
         }else
         {
-            objectif = null;
+            attendre();
         }
     }
     public void partirAcheter()
@@ -180,9 +218,11 @@ public class Habitant extends Individu implements Monetaire {
 
         if(volonteAchat != null)
         {
+            modeActiviteReel = ModeActivite.ACHETER;
             List<Stockage> dispo = Monde.trouverDisponibilites(volonteAchat, TypeDisponibilite.MAGASIN);
             if(dispo.contains(position))
             {
+                //Dans le magasin
                 objectif = position;
                 Boutique bt = (Boutique) position;
                 bt.vendre(volonteAchat,this);
@@ -190,36 +230,117 @@ public class Habitant extends Individu implements Monetaire {
             }
             else if(dispo.size()>0)
             {
-                Boutique bt = (Boutique) dispo.get(Fonctions.r.nextInt(dispo.size()));
-                objectif = bt;
+                //Il existe un magasin
+                if(!dispo.contains(objectif)) {
+                    //trouver la destination
+                    Boutique bt = (Boutique) dispo.get(Fonctions.r.nextInt(dispo.size()));
+                    objectif = bt;
+                }
             }
             else
             {
-                objectif = null;
+                //Pas de magasin
+                attendre();
+                volonteAchat = null;
             }
         }
         else
         {
-            objectif = null;
+            partirVisiter();
+        }
+    }
+    public void partirVisiter()
+    {
+        List<LieuPhysique> lieuxPhysiques = Monde.getLieuxPhysiques();
+        LieuPhysique lp = lieuxPhysiques.get(Fonctions.r.nextInt(lieuxPhysiques.size()));
+        objectif = lp;
+        modeActiviteReel = ModeActivite.VISITER;
+    }
+    public void attendre()
+    {
+        objectif = position;
+        modeActiviteReel = ModeActivite.ATTENDRE;
+    }
+    public void manger()
+    {
+        if(!estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
+            equiper(FamillesMarchandises.ALIMENTAIRE);
+        }
+        if(estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
+            if (residence != null) {
+                modeActiviteReel = ModeActivite.MANGER;
+                objectif = residence;
+            } else {
+                modeActiviteReel = ModeActivite.MANGER;
+                objectif = position;
+            }
+        }
+        else
+        {
+            attendre();
         }
     }
 
     public void equiper(TypeMarchandise tm)
     {
         List<Marchandise> possib = inventaire.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.toList());
+        if(possib.size()>0) {
+            Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
+            inventaire.remove(choix);
+            inventaireEquipe.add(choix);
+        }
+    }
+    public void equiper(FamillesMarchandises fm)
+    {
+        List<Marchandise> possib = inventaire.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
+                .collect(Collectors.toList());
+        if(possib.size()>0) {
+            Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
+            inventaire.remove(choix);
+            inventaireEquipe.add(choix);
+        }
+    }
+    public boolean estEquipe(TypeMarchandise tm)
+    {
+        long possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.counting());
+        return possib >0;
+    }
+    public boolean estEquipe(FamillesMarchandises fm)
+    {
+        long possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
+                .collect(Collectors.counting());
+        return possib >0;
+    }
+    public boolean peutEquiper(TypeMarchandise tm)
+    {
+        long possib = inventaire.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.counting());
+        return possib >0;
+    }
+    public boolean peutEquiper(FamillesMarchandises fm)
+    {
+        long possib = inventaire.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
+                .collect(Collectors.counting());
+        return possib >0;
+    }
+    public void deEquiper(TypeMarchandise tm)
+    {
+        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.toList());
         Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
-        inventaire.remove(choix);
-        inventaireEquipe.add(choix);
+        inventaireEquipe.remove(choix);
+        inventaire.add(choix);
     }
 
 
+
+    @Override
     public void Update(double dt)
     {
-        trouverAffectations();
-        choisirComportement();
+        super.Update(dt);
+        modeActiviteVoulu = choisirComportement();
         comportement();
         userEquipementPorte(dt);
         deplacer(dt);
+        besoins.update(dt,modeActiviteReel);
     }
 
     public void userEquipementPorte(double dt)
@@ -257,6 +378,12 @@ public class Habitant extends Individu implements Monetaire {
             Universite chosie = res.get(Fonctions.r.nextInt(res.size()));
             chosie.inscrire(this);
         }
+        if(banque==null)
+        {
+            List<Banque> res = Monde.trouverBanquesPossibles(this);
+            Banque chosie = res.get(Fonctions.r.nextInt(res.size()));
+            chosie.sInscrire(this);
+        }
     }
     public void supprimer()
     {
@@ -272,6 +399,19 @@ public class Habitant extends Individu implements Monetaire {
         {
             universite.oublier(this);
         }
+        if(banque != null)
+        {
+            banque.oublier(this);
+        }
+    }
+
+    @Override
+    public void jourPasse(double dt) {
+        trouverAffectations();
+    }
+
+    public String getNomFamille() {
+        return nomFamille;
     }
 }
 

@@ -1,13 +1,16 @@
 package Global.SrcEconomie;
 
 import Global.Monde;
+import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 
 import java.util.List;
+import java.util.function.Function;
 
-public class Etat implements Monetaire{
-    double taxeVente;
-    double taxeEpargne;
+public class Etat implements Monetaire,JourListener{
+    Function<Double,Double> taxeVente;
+    Function<Double,Double> taxeEpargne;
     double PIB;
+    double budgetUniversites;
     CompteBancaire finances;
 
     public void incrementerPIB(double valeur)
@@ -22,7 +25,7 @@ public class Etat implements Monetaire{
         {
             CompteBancaire cible = m.getCompteBancaire();
             if(cible.getSomme()>0) {
-                double montant = cible.getSomme()*getTaxeEpargne();
+                double montant = cible.getSomme()*getTaxeEpargne().apply(cible.getSomme());
                 finances.prelever(cible,montant , "Impot Epargne");
             }
         }
@@ -34,12 +37,15 @@ public class Etat implements Monetaire{
     }
 
 
-    public double getTaxeVente() {
-        return taxeVente;
-    }
 
-    public double getTaxeEpargne() {
-        return taxeEpargne;
+    public void financerUniversites()
+    {
+        List<Universite> univs = Monde.getUniversites();
+        for(Universite u : univs)
+        {
+            CompteBancaire cptUniv =  u.getCompteBancaire();
+            finances.payer(cptUniv,budgetUniversites,"Financement universite "+u.getNom());
+        }
     }
 
     public double getPIB() {
@@ -48,5 +54,26 @@ public class Etat implements Monetaire{
 
     public CompteBancaire getFinances() {
         return finances;
+    }
+
+
+    //TODO allocations
+    @Override
+    public void jourPasse(double dt) {
+        getTaxeEpargne();
+        getTaxeVente();
+        financerUniversites();
+    }
+
+    public Function<Double, Double> getTaxeVente() {
+        return taxeVente;
+    }
+
+    public Function<Double, Double> getTaxeEpargne() {
+        return taxeEpargne;
+    }
+
+    public double getBudgetUniversites() {
+        return budgetUniversites;
     }
 }

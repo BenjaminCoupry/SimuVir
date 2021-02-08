@@ -4,6 +4,8 @@ import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Entreprises.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
@@ -29,6 +31,9 @@ public class Monde {
     static int jour;
     static double dt;
     static Etat etat;
+    //TODO enregistrer les listeners
+    static List<JourListener> jourListeners;
+    static List<DtListener> dtListeners;
 
     public static List<Virus> getVirusExistants() {
         return virusExistants;
@@ -41,6 +46,14 @@ public class Monde {
         if(!virusExistants.contains(virus)) {
             virusExistants.add(virus);
         }
+    }
+    public static void addJourListener(JourListener jl)
+    {
+        jourListeners.add(jl);
+    }
+    public static void addDtListener(DtListener dl)
+    {
+        dtListeners.add(dl);
     }
 
     public static List<Stockage> trouverDisponibilites(TypeMarchandise tm, TypeDisponibilite dispo)
@@ -77,6 +90,13 @@ public class Monde {
                 .collect(Collectors.toList());
         return mt;
     }
+    public static List<Banque> trouverBanquesPossibles(Monetaire mon)
+    {
+        List<Banque> mt = getBanques().stream()
+                .filter(b -> b.peutSinscrire(mon))
+                .collect(Collectors.toList());
+        return mt;
+    }
 
 
 
@@ -110,6 +130,14 @@ public class Monde {
         return mt;
     }
 
+    public static List<Banque> getBanques() {
+        List<Banque> mt = getEntreprises().stream()
+                .filter(res -> res instanceof Banque)
+                .map(l -> (Banque)l)
+                .collect(Collectors.toList());
+        return mt;
+    }
+
     public static List<Entreprise> getEntreprises() {
         List<Entreprise> mt = getLieuxPhysiques().stream()
                 .filter(res -> res instanceof Entreprise)
@@ -117,6 +145,7 @@ public class Monde {
                 .collect(Collectors.toList());
         return mt;
     }
+
 
 
     public static List<EntrepriseTransport> getTransporteurs() {
@@ -177,7 +206,7 @@ public class Monde {
     public void Update()
     {
         heure += dt;
-        UpdateElements();
+        UpdateDt();
         if(heure >1.0)
         {
             jour +=1;
@@ -187,19 +216,20 @@ public class Monde {
     }
     public void UpdateJournaliere()
     {
-        PasserCommandesStockages();
-    }
-    public void UpdateElements()
-    {
-        //TODO update elements chaque dt
-    }
-    public void PasserCommandesStockages()
-    {
-        for(Stockage st : getStockages())
+        for(JourListener jl : jourListeners)
         {
-            st.passerCommandes();
+            jl.jourPasse(dt);
         }
     }
+    public void UpdateDt()
+    {
+        for(DtListener jl : dtListeners)
+        {
+            jl.Update(dt);
+        }
+    }
+
+
     public static List<Residence> getResidences() {
         List<Residence> mt = getLieuxPhysiques().stream()
                 .filter(res -> res instanceof Residence)

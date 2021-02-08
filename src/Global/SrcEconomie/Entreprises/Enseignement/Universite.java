@@ -1,5 +1,6 @@
 package Global.SrcEconomie.Entreprises.Enseignement;
 
+import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcVirus.Individu;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Universite extends Entreprise {
+public class Universite extends Entreprise implements DtListener {
     Formation formation;
     HashMap<Habitant,Double> tempsRestantAvantObtention;
     int places;

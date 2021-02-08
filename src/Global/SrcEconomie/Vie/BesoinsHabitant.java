@@ -27,11 +27,34 @@ public class BesoinsHabitant {
                 loisir = clamp(loisir-0.2*dt);
                 energie = clamp(energie - 0.2*dt);
                 break;
+            case ACHETER:
+                nourriture = clamp(nourriture-0.5*dt);
+                loisir = clamp(loisir+0.2*dt);
+                energie = clamp(energie - 0.2*dt);
+                break;
+            case VISITER:
+                nourriture = clamp(nourriture-0.5*dt);
+                loisir = clamp(loisir+1*dt);
+                energie = clamp(energie - 0.2*dt);
+                break;
             case TRAVAILLER:
+            case ETUDIER:
                 nourriture = clamp(nourriture-0.9*dt);
                 loisir = clamp(loisir-0.6*dt);
                 energie = clamp(energie -1.0*dt);
                 break;
         }
+    }
+    public boolean affame()
+    {
+        return nourriture<20;
+    }
+    public boolean fatigue()
+    {
+        return energie<20;
+    }
+    public boolean triste()
+    {
+        return loisir<20;
     }
 }

@@ -1,9 +1,11 @@
 package Global.SrcEconomie;
 
 import Global.SrcEconomie.Entreprises.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Marchandises;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -13,6 +15,19 @@ public class TypeMarchandise {
     String name;
     List<FamillesMarchandises> familles;
     public static HashMap<Marchandises,TypeMarchandise> mtypesMarchandises;
+
+    public TypeMarchandise(double prixFournisseur, String name, List<FamillesMarchandises> familles) {
+        this.prixFournisseur = prixFournisseur;
+        this.name = name;
+        this.familles = familles;
+    }
+
+    public static void register( Marchandises clef, List<FamillesMarchandises> tags, double prix)
+    {
+        TypeMarchandise tm = new TypeMarchandise(prix,clef.toString(),tags);
+        mtypesMarchandises.put(clef,tm);
+    }
+
 
     public static TypeMarchandise get(Marchandises name)
     {
@@ -50,5 +65,9 @@ public class TypeMarchandise {
     @Override
     public int hashCode() {
         return Objects.hash(getPrixFournisseur(), getName());
+    }
+
+    public List<FamillesMarchandises> getFamilles() {
+        return familles;
     }
 }

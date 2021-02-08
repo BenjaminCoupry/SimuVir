@@ -1,18 +1,16 @@
 package Global.SrcEconomie.Entreprises;
-
-import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.*;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.LieuPhysique;
-import Global.SrcEconomie.Monetaire;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Entreprise extends LieuPhysique implements Monetaire {
+public class Entreprise extends LieuPhysique implements Monetaire, DtListener, JourListener {
     String nom;
     double efficacite;
     CompteBancaire compteBancaire;
     List<Poste> postes;
+    //TODO payer les salaires
     public void Update(double dt)
     {
         efficacite = calculerEfficacite();
@@ -105,5 +103,11 @@ public class Entreprise extends LieuPhysique implements Monetaire {
                 p.renvoyer();
             }
         }
+    }
+
+    @Override
+    public void jourPasse(double dt) {
+        super.jourPasse(dt);
+        payerSalaires();
     }
 }
