@@ -2,6 +2,8 @@ package Global.SrcEconomie;
 
 import Global.Monde;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
+import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
+import Global.SrcEconomie.Entreprises.Finance.Monetaire;
 
 import java.util.List;
 import java.util.function.Function;

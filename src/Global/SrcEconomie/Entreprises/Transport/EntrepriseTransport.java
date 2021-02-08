@@ -7,8 +7,8 @@ import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.LieuPhysique;
-import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcEconomie.Hitboxes.LieuPhysique;
+import Global.SrcEconomie.Entreprises.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.HashMap;

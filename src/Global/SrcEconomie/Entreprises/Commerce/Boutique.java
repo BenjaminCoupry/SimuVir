@@ -10,7 +10,7 @@ import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.List;

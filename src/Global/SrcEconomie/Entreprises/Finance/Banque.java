@@ -1,13 +1,8 @@
 package Global.SrcEconomie.Entreprises.Finance;
 
-import Global.Monde;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.Entreprises.Marchandise;
-import Global.SrcEconomie.Entreprises.Poste;
-import Global.SrcEconomie.Entreprises.Transport.*;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcVirus.Fonctions;
 
 import java.util.HashMap;
 import java.util.LinkedList;

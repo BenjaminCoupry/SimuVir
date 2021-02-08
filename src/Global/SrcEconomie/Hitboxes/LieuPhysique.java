@@ -1,12 +1,12 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Hitboxes;
 
 import Global.Monde;
+import Global.SrcEconomie.JourListener;
 import Global.SrcVirus.Lieu;
 import PathFinding.InfoChemin;
 import PathFinding.PathFinder;
 import PathFinding.Place;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package Global.SrcEconomie;
+package Global.SrcEconomie.Entreprises.Finance;
 
 import Global.Monde;
 

@@ -1,11 +1,11 @@
 package Global.SrcEconomie.Logement;
 
 import Global.Monde;
-import Global.SrcEconomie.CompteBancaire;
+import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.LieuPhysique;
+import Global.SrcEconomie.Hitboxes.LieuPhysique;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,7 +1,6 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
-import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.TypeMarchandise;
 
 public class OrdreTransport {
     Stockage depart;

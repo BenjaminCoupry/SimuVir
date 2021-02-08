@@ -1,7 +1,5 @@
 package Global.SrcEconomie.Entreprises;
 
-import Global.SrcEconomie.TypeMarchandise;
-
 public class Marchandise {
     TypeMarchandise typeMarchandise;
     double durabilite;

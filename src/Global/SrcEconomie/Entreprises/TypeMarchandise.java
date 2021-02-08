@@ -1,11 +1,6 @@
-package Global.SrcEconomie;
-
-import Global.SrcEconomie.Entreprises.FamillesMarchandises;
-import Global.SrcEconomie.Entreprises.Marchandise;
-import Global.SrcEconomie.Entreprises.Marchandises;
+package Global.SrcEconomie.Entreprises;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

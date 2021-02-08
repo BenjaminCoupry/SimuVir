@@ -1,5 +1,8 @@
 package Global.SrcEconomie.Entreprises;
 import Global.SrcEconomie.*;
+import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
+import Global.SrcEconomie.Entreprises.Finance.Monetaire;
+import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Vie.Habitant;
 
 import java.util.List;

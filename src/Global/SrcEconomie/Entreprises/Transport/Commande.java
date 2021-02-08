@@ -1,7 +1,7 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
-import Global.SrcEconomie.CompteBancaire;
-import Global.SrcEconomie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
+import Global.SrcEconomie.Entreprises.TypeMarchandise;
 
 public class Commande {
     Stockage destination;

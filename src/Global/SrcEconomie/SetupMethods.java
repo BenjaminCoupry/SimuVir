@@ -2,6 +2,7 @@ package Global.SrcEconomie;
 
 import Global.SrcEconomie.Entreprises.FamillesMarchandises;
 import Global.SrcEconomie.Entreprises.Marchandises;
+import Global.SrcEconomie.Entreprises.TypeMarchandise;
 
 import java.util.LinkedList;
 import java.util.List;
