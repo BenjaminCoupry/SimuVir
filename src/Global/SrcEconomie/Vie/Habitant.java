@@ -16,6 +16,7 @@ import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
+import java.awt.geom.Point2D;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,28 +35,37 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     Poste poste;
     CompteBancaire compteBancaire;
     LieuPhysique position;
+    LieuPhysique next;
     LieuPhysique objectif;
     TypeMarchandise volonteAchat;
     ModeActivite modeActiviteReel;
     ModeActivite modeActiviteVoulu;
     double avancementLieu;
     BesoinsHabitant besoins;
+    Point2D next_pt;
+    Point2D start_pt;
 
-    public Habitant(Function<Double, Double> probaMortNaturelle, double age,String prenom,String nomFamille) {
+
+    public Habitant(Function<Double, Double> probaMortNaturelle, double age,String prenom,String nomFamille,LieuPhysique position) {
         super(probaMortNaturelle, age);
         this.prenom = prenom;
+        this.position = position;
         this.nomFamille = nomFamille;
         residence = null;
         universite =null;
         banque = null;
         poste = null;
+
+        start_pt = position.getHitbox().getRandomPoint();
+        next_pt = position.getHitbox().getRandomPoint();;
         modeActiviteReel = ModeActivite.ATTENDRE;
         modeActiviteVoulu = ModeActivite.ATTENDRE;
         avancementLieu =0;
         besoins = new BesoinsHabitant();
         volonteAchat = null;
         compteBancaire = new CompteBancaire(0);
-        objectif = null;
+        objectif = position;
+        next = objectif;
         connaissances = new LinkedList<>();
         inventaire = new LinkedList<>();
         inventaireEquipe = new LinkedList<>();
@@ -121,17 +131,29 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     }
 
 
+    public Point2D getPositionActuele()
+    {
+        double kav = avancementLieu/position.getTempsTraversee();
+        double xres = start_pt.getX()*(1.0-kav) + next_pt.getX()*kav;
+        double yres = start_pt.getY()*(1.0-kav) + next_pt.getY()*kav;
+        return new Point2D.Double(xres,yres);
+    }
     public void deplacer(double dt)
     {
         avancementLieu+= dt;
         if(avancementLieu> position.getTempsTraversee())
         {
             avancementLieu=0;
-            if(objectif != null && objectif != position) {
-                List<LieuPhysique> next = position.getChemin(objectif);
-                if (next.size() > 1) {
-                    entrerLieu( next.get(1));
+            entrerLieu(next);
+            start_pt = next_pt;
+            if(objectif != null) {
+                if(objectif != position) {
+                    List<LieuPhysique> next_ = position.getChemin(objectif);
+                    if (next_.size() > 1) {
+                        next = next_.get(1);
+                    }
                 }
+                next_pt = next.getHitbox().getRandomPoint();
             }
         }
     }
@@ -141,6 +163,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         position =cible;
         cible.getVisiteurs().add(this);
     }
+
 
 
     public ModeActivite choisirComportement()
@@ -359,10 +382,20 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     }
     public void deEquiper(TypeMarchandise tm)
     {
-        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.toList());
-        Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
-        inventaireEquipe.remove(choix);
-        inventaire.add(choix);
+        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm))
+                .collect(Collectors.toList());
+
+        inventaireEquipe.removeAll(possib);
+        inventaire.addAll(possib);
+    }
+    public void deEquiper(FamillesMarchandises fm)
+    {
+        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise()
+                .getFamilles().contains(fm))
+                .collect(Collectors.toList());
+
+        inventaireEquipe.removeAll(possib);
+        inventaire.addAll(possib);
     }
 
 

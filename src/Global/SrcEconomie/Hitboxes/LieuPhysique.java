@@ -9,6 +9,7 @@ import PathFinding.InfoChemin;
 import PathFinding.PathFinder;
 import PathFinding.Place;
 
+import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,6 +47,10 @@ public class LieuPhysique extends Lieu implements JourListener {
         return adjacents;
     }
 
+    public Point2D getPoint()
+    {
+        return new Point2D.Double(getX(),getY());
+    }
     public double getX()
     {
         return place.getX();
@@ -100,5 +105,9 @@ public class LieuPhysique extends Lieu implements JourListener {
     @Override
     public void jourPasse(double dt) {
         super.transmettre(dt);
+    }
+
+    public Hitbox getHitbox() {
+        return hitbox;
     }
 }

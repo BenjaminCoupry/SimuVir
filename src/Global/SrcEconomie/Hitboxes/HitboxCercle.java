@@ -1,5 +1,8 @@
 package Global.SrcEconomie.Hitboxes;
 
+import Global.SrcVirus.Fonctions;
+import java.awt.geom.Point2D;
+
 public class HitboxCercle implements Hitbox{
     double x0;
     double y0;
@@ -19,5 +22,12 @@ public class HitboxCercle implements Hitbox{
     @Override
     public double getSurface() {
         return Math.PI*r*r;
+    }
+
+    @Override
+    public Point2D getRandomPoint() {
+        double ray = r* Fonctions.r.nextDouble();
+        double teta = Math.PI*2.0*Fonctions.r.nextDouble();
+        return new Point2D.Double(x0+ray*Math.cos(teta),y0+ray*Math.sin(teta));
     }
 }

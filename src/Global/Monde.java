@@ -15,17 +15,17 @@ import Global.SrcEconomie.Entreprises.TypeMarchandise;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcEconomie.Vie.Habitant;
+import Global.SrcEconomie.Voierie.Route;
 import Global.SrcVirus.Virus;
 import PathFinding.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.awt.geom.Point2D;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Monde {
-    static List<Virus> virusExistants;
+    static HashMap<String,Virus> virusExistants;
     static List<LieuPhysique> lieuxPhysiques;
     static HashMap<Place,LieuPhysique> lieuPlace;
     static List<Habitant> habitants;
@@ -37,16 +37,11 @@ public class Monde {
     static List<JourListener> jourListeners;
     static List<DtListener> dtListeners;
 
-    public static List<Virus> getVirusExistants() {
-        return virusExistants;
-    }
 
-    public static void setVirusExistants(List<Virus> virusExistantsNew) {
-        virusExistants = virusExistantsNew;
-    }
+
     public static void referencerVirus(Virus virus) {
-        if(!virusExistants.contains(virus)) {
-            virusExistants.add(virus);
+        if(!virusExistants.containsKey(virus.getNom())) {
+            virusExistants.put(virus.getNom(),virus);
         }
     }
     public static void addJourListener(JourListener jl)
@@ -101,6 +96,15 @@ public class Monde {
     }
 
 
+    public static void ajouterLieu(LieuPhysique l)
+    {
+        lieuxPhysiques.add(l);
+        lieuPlace.put(l.getPlace(),l);
+    }
+    public static void ajouterHabitant(Habitant hab)
+    {
+        habitants.add(hab);
+    }
 
     public static List<Poste> trouverPostesPossibles(Habitant hab)
     {
@@ -193,6 +197,29 @@ public class Monde {
         mon.addAll(getEntreprises());
         mon.addAll(getHabitants());
         return mon;
+    }
+
+    public static List<Route> getRoutes()
+    {
+        List<Route> mt = getLieuxPhysiques().stream()
+                .filter(res -> res instanceof Route)
+                .map(l -> (Route)l)
+                .collect(Collectors.toList());
+        return mt;
+    }
+
+    Route getRoutePlusProche(Point2D comparaison)
+    {
+        List<Route> routes = getRoutes();
+        if(routes.size()>0) {
+            return routes.stream().min(
+                    Comparator.comparingDouble(x -> comparaison.distance(x.getPoint()))
+            ).get();
+        }
+        else
+        {
+            return null;
+        }
     }
 
 
