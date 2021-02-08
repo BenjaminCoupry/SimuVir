@@ -13,6 +13,23 @@ public class Poste {
     Entreprise entreprise;
     HoraireTravail horaires;
 
+    public Poste(double salaire, double importance, List<Connaissance> connaissancesRequises, Habitant occupant, Entreprise entreprise, HoraireTravail horaires) {
+        this.salaire = salaire;
+        this.importance = importance;
+        this.connaissancesRequises = connaissancesRequises;
+        this.occupant = occupant;
+        this.entreprise = entreprise;
+        this.horaires = horaires;
+    }
+
+    public Poste(double salaire, double importance, List<Connaissance> connaissancesRequises, Habitant occupant, HoraireTravail horaires) {
+        this.salaire = salaire;
+        this.importance = importance;
+        this.connaissancesRequises = connaissancesRequises;
+        this.occupant = occupant;
+        this.horaires = horaires;
+    }
+
     public boolean peutPostuler(Habitant hab)
     {
         return occupant == null && Connaissance.estApte(hab,connaissancesRequises);
@@ -83,5 +100,9 @@ public class Poste {
 
     public HoraireTravail getHoraires() {
         return horaires;
+    }
+
+    public void setEntreprise(Entreprise entreprise) {
+        this.entreprise = entreprise;
     }
 }

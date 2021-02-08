@@ -98,11 +98,18 @@ public class Virus {
     }
     public Virus muter()
     {
-        //TODO mutation
         if(Fonctions.r.nextDouble()<mutabilite)
         {
             String nouvNom = nom+"_mutation"+Fonctions.getUID();
-            return new Virus(nouvNom,famille,lethalite,mutabilite,contagiosite,gainImmunite,perteImmunite,fragilite,reproduction);
+            double mutation = Fonctions.r.nextDouble()*mutabilite;
+            double cont = contagiosite*(1.0-mutation)+Fonctions.r.nextDouble()*mutation;
+            double mut = (1.0-mutation)*mutabilite+Fonctions.r.nextDouble()*mutation;
+            double frag = (1.0-mutation)*fragilite+Fonctions.r.nextDouble()*mutation;
+            double repr = (1.0-mutation)*reproduction+Fonctions.r.nextDouble()*mutation;
+            Function<Double,Double> leth = Fonctions.kMult((1.0-mutation)+mutation*Fonctions.r.nextDouble()*2,lethalite);
+            Function<Double,Double> gImmu = Fonctions.kMult((1.0-mutation)+mutation*Fonctions.r.nextDouble()*2,gainImmunite);
+            Function<Double,Double> pImmu = Fonctions.kMult((1.0-mutation)+mutation*Fonctions.r.nextDouble()*2,perteImmunite);
+            return new Virus(nouvNom,famille,leth,mut,cont,gImmu,pImmu,frag,repr);
         }
         else
         {

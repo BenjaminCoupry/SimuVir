@@ -2,6 +2,7 @@ package Global.SrcEconomie.Entreprises.Finance;
 
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.Vie.Habitant;
 
 import java.util.HashMap;
@@ -17,6 +18,16 @@ public class Banque extends Entreprise implements DtListener, JourListener {
     double efficaciteMoyenne;
     double tauxInteret;
     double frais;
+
+    public Banque(Hitbox hitbox, double tempsTraversee, double x, double y, double tauxInteret, double frais) {
+        super(hitbox, tempsTraversee, x, y);
+        comptes = new HashMap<>();
+        efficacites = new LinkedList<>();
+        efficaciteMoyenne =0;
+        this.tauxInteret = tauxInteret;
+        this.frais = frais;
+
+    }
 
     @Override
     public void Update(double dt)

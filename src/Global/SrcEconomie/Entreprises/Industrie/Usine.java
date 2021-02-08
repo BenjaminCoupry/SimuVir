@@ -6,11 +6,13 @@ import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Entreprises.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,16 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
     RecetteIndustrie recette;
     double tempsRestantAvantCompletion;
     boolean enFabrication;
+
+    public Usine(Hitbox hitbox, double tempsTraversee, double x, double y, RecetteIndustrie recette) {
+        super(hitbox, tempsTraversee, x, y);
+        entree = new LinkedList<>();
+        sortie = new LinkedList<>();
+        this.recette = recette;
+        tempsRestantAvantCompletion = recette.getTempsFabrication();
+        enFabrication=false;
+
+    }
 
     public List<TypeMarchandise> trouverElementsManquants()
     {

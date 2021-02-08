@@ -2,9 +2,11 @@ package Global.SrcEconomie.Entreprises;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Vie.Habitant;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,21 @@ public class Entreprise extends LieuPhysique implements Monetaire, DtListener, J
     double efficacite;
     CompteBancaire compteBancaire;
     List<Poste> postes;
-    //TODO payer les salaires
+
+    public Entreprise(Hitbox hitbox, double tempsTraversee, double x, double y) {
+        super(hitbox, tempsTraversee, x, y);
+        efficacite = 0;
+        this.nom = nom;
+        postes = new LinkedList<>();
+        compteBancaire = new CompteBancaire(0);
+    }
+
+    public void ajouterPoste(Poste p)
+    {
+        postes.add(p);
+        p.setEntreprise(this);
+    }
+
     public void Update(double dt)
     {
         efficacite = calculerEfficacite();

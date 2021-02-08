@@ -7,6 +7,12 @@ public class RecetteIndustrie {
     List<UsageMarchandise> production;
     double tempsFabrication;
 
+    public RecetteIndustrie(List<UsageMarchandise> consommation, List<UsageMarchandise> production, double tempsFabrication) {
+        this.consommation = consommation;
+        this.production = production;
+        this.tempsFabrication = tempsFabrication;
+    }
+
 
     public List<UsageMarchandise> getConsommation() {
         return consommation;

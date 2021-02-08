@@ -339,11 +339,17 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     public void Update(double dt)
     {
         super.Update(dt);
-        modeActiviteVoulu = choisirComportement();
-        comportement();
-        userEquipementPorte(dt);
-        deplacer(dt);
-        besoins.update(dt,modeActiviteReel);
+        if(!isMort()) {
+            modeActiviteVoulu = choisirComportement();
+            comportement();
+            userEquipementPorte(dt);
+            deplacer(dt);
+            besoins.update(dt, modeActiviteReel);
+        }
+        if(isMort())
+        {
+            supprimer();
+        }
     }
 
     public void userEquipementPorte(double dt)
@@ -410,7 +416,9 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
 
     @Override
     public void jourPasse(double dt) {
-        trouverAffectations();
+        if(!isMort()) {
+            trouverAffectations();
+        }
     }
 
     public String getNomFamille() {

@@ -97,7 +97,7 @@ public class Individu {
     public void Update(double dt)
     {
         UpdateInfections(dt);
-        //TODO completer
+        age += dt;
     }
 
     public void Vacciner(Vaccin vaccin)

@@ -4,6 +4,11 @@ public class Marchandise {
     TypeMarchandise typeMarchandise;
     double durabilite;
 
+    public Marchandise(TypeMarchandise typeMarchandise, double durabilite) {
+        this.typeMarchandise = typeMarchandise;
+        this.durabilite = durabilite;
+    }
+
     public boolean user(double dt)
     {
         durabilite -= dt;

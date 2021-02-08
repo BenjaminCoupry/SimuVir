@@ -2,6 +2,7 @@ package Global.SrcEconomie.Hitboxes;
 
 import Global.Monde;
 import Global.SrcEconomie.JourListener;
+import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
 import PathFinding.InfoChemin;
 import PathFinding.PathFinder;
@@ -16,6 +17,28 @@ public class LieuPhysique extends Lieu implements JourListener {
     Hitbox hitbox;
     InfoChemin infoChemin;
     double tempsTraversee;
+
+    public LieuPhysique(Hitbox hitbox, double tempsTraversee, double x, double y) {
+        this.hitbox = hitbox;
+        this.tempsTraversee = tempsTraversee;
+        place = new Place("place"+Fonctions.getUID(),x,y);
+        this.hitbox = hitbox;
+        adjacents = new LinkedList<>();
+        infoChemin = null;
+    }
+
+
+    public void connecter(LieuPhysique autre)
+    {
+        if(!adjacents.contains(autre))
+        {
+            adjacents.add(autre);
+        }
+        if(!autre.getAdjacents().contains(autre))
+        {
+            autre.getAdjacents().add(autre);
+        }
+    }
 
     public List<LieuPhysique> getAdjacents() {
         return adjacents;

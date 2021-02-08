@@ -8,17 +8,26 @@ import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.Entreprises.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Boutique extends Entreprise implements Stockage, DtListener, JourListener {
     List<Marchandise> stock;
     List<UsageMarchandise> catalogue;
+
+    public Boutique(Hitbox hitbox, double tempsTraversee, double x, double y,List<UsageMarchandise> catalogue) {
+        super(hitbox, tempsTraversee, x, y);
+        stock = new LinkedList<>();
+        this.catalogue = catalogue;
+    }
+
     public boolean peutVendre(TypeMarchandise tm)
     {
         for(Marchandise m : stock)

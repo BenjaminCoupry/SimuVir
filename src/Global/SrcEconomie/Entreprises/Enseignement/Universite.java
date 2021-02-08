@@ -2,9 +2,11 @@ package Global.SrcEconomie.Entreprises.Enseignement;
 
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcVirus.Individu;
 
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +15,13 @@ public class Universite extends Entreprise implements DtListener {
     Formation formation;
     HashMap<Habitant,Double> tempsRestantAvantObtention;
     int places;
+
+    public Universite(Hitbox hitbox, double tempsTraversee, double x, double y, int places, Formation formation) {
+        super(hitbox, tempsTraversee, x, y);
+        tempsRestantAvantObtention = new HashMap<>();
+        this.formation = formation;
+        this.places = places;
+    }
 
     public void Update(double dt)
     {

@@ -2,6 +2,7 @@ package Global.SrcEconomie.Entreprises.Finance;
 
 import Global.Monde;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class CompteBancaire {
@@ -9,6 +10,13 @@ public class CompteBancaire {
     List<String> historiqueMotifs;
     List<Double> historiqueSolde;
     List<Double> historiqueMouvements;
+
+    public CompteBancaire(double somme) {
+        this.somme = somme;
+        historiqueMotifs = new LinkedList<>();
+        historiqueSolde = new LinkedList<>();
+        historiqueMouvements = new LinkedList<>();
+    }
 
     public void payer(CompteBancaire recepteur , double valeur, String motif)
     {

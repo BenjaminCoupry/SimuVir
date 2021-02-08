@@ -5,6 +5,7 @@ import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
+import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
@@ -22,6 +23,14 @@ public class EntrepriseTransport extends Entreprise implements DtListener, JourL
     HashMap<Habitant, Marchandise> inventairesLivreurs;
     HashMap<Habitant,OrdreTransport> livraisons;
     double tarif;
+
+    public EntrepriseTransport(Hitbox hitbox, double tempsTraversee, double x, double y, double tarif) {
+        super(hitbox, tempsTraversee, x, y);
+        commandes = new LinkedList<>();
+        inventairesLivreurs = new HashMap<>();
+        livraisons = new HashMap<>();
+        this.tarif = tarif;
+    }
 
     public void traiterCommandes()
     {
