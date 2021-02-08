@@ -1,6 +1,7 @@
 package Global.SrcEconomie.Entreprises;
 
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
+import Global.SrcEconomie.Entreprises.Horaires.HoraireTravail;
 import Global.SrcEconomie.Vie.Habitant;
 
 import java.util.List;

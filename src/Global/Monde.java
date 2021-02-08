@@ -209,10 +209,10 @@ public class Monde {
     {
         heure += dt;
         UpdateDt();
-        if(heure >1.0)
+        if(heure >24.0)
         {
             jour +=1;
-            heure -= 1.0;
+            heure =0;
             UpdateJournaliere();
         }
     }

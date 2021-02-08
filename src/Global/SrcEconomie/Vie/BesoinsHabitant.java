@@ -4,6 +4,7 @@ public class BesoinsHabitant {
     double nourriture;
     double loisir;
     double energie;
+    //TODO vieillir plus vite en fonction de la qualite de vie
     private double clamp(double x)
     {
         return Math.max(0,Math.min(100,x));
