@@ -148,7 +148,15 @@ public class Monde {
         return mt;
     }
 
-
+    public static List<Monetaire> getMonetaires()
+    {
+        List<Monetaire> mt = getEntreprises().stream()
+                .filter(res -> res instanceof Monetaire)
+                .collect(Collectors.toList());
+        mt.addAll(getHabitants());
+        mt.add(getEtat());
+        return mt;
+    }
 
     public static List<EntrepriseTransport> getTransporteurs() {
         List<EntrepriseTransport> mt = getEntreprises().stream()

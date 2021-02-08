@@ -412,6 +412,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         {
             banque.oublier(this);
         }
+        Monde.getHabitants().remove(this);
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Individu {
     HashMap<String,Immunite> immunites;
@@ -68,10 +69,15 @@ public class Individu {
         return probaMortNaturelle;
     }
 
-    public void setProbaMortNaturelle(Function<Double, Double> probaMortNaturelle) {
-        this.probaMortNaturelle = probaMortNaturelle;
-    }
 
+    public double getChargeViraleTotale()
+    {
+        return infections.values().stream().map(i->i.getChargeVirale()).collect(Collectors.summingDouble(i->i));
+    }
+    public double getImmuniteTotale()
+    {
+        return immunites.values().stream().map(i->i.getActivite()).collect(Collectors.summingDouble(i->i));
+    }
 
     public void UpdateInfections(double dt)
     {
