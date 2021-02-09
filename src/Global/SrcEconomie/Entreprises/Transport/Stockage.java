@@ -1,7 +1,7 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
-import Global.SrcEconomie.Entreprises.Marchandise;
-import Global.SrcEconomie.Entreprises.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 
 public interface Stockage {
     Marchandise fournir(TypeMarchandise tm);

@@ -8,14 +8,18 @@ public class Formation {
     List<Connaissance> connaissancesFournies;
     List<Connaissance> connaissancesRequises;
     double tempsObtention;
+
+    public Formation(List<Connaissance> connaissancesFournies, List<Connaissance> connaissancesRequises, double tempsObtention) {
+        this.connaissancesFournies = connaissancesFournies;
+        this.connaissancesRequises = connaissancesRequises;
+        this.tempsObtention = tempsObtention;
+    }
+
     public void donner(Habitant hab)
     {
         for(Connaissance c: connaissancesFournies)
         {
-            if(!hab.getConnaissances().contains(c))
-            {
-                hab.apprendre(c);
-            }
+            hab.apprendre(c);
         }
     }
     public boolean estApte(Habitant hab)

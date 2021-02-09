@@ -9,6 +9,9 @@ import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
+import Global.SrcEconomie.Entreprises.Industrie.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
@@ -18,6 +21,7 @@ import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
 import java.awt.geom.Point2D;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -44,6 +48,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     BesoinsHabitant besoins;
     Point2D next_pt;
     Point2D start_pt;
+    double cooldown;
 
 
     public Habitant(Function<Double, Double> probaMortNaturelle, double age,String prenom,String nomFamille,LieuPhysique position) {
@@ -55,13 +60,13 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         universite =null;
         banque = null;
         poste = null;
-
+        cooldown = ConstantesEco.cooldown_actions;
         start_pt = position.getHitbox().getRandomPoint();
         next_pt = position.getHitbox().getRandomPoint();;
         modeActiviteReel = ModeActivite.ATTENDRE;
         modeActiviteVoulu = ModeActivite.ATTENDRE;
         avancementLieu =0;
-        besoins = new BesoinsHabitant();
+        besoins = new BesoinsHabitant(this);
         volonteAchat = null;
         compteBancaire = new CompteBancaire(0);
         objectif = position;
@@ -73,7 +78,28 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     }
     public void apprendre(Connaissance c)
     {
-        connaissances.add(c);
+        boolean update = false;
+        Connaissance rm = null;
+        for(Connaissance co : connaissances)
+        {
+            if(co.getTypeConnaissance().equals(c.getTypeConnaissance()))
+            {
+                update = true;
+                if(co.getNiveau()<c.getNiveau())
+                {
+                    connaissances.add(c);
+                    rm = co;
+                }
+            }
+        }
+        if(rm!=null)
+        {
+            connaissances.remove(rm);
+        }
+        if(!update)
+        {
+            connaissances.add(c);
+        }
     }
 
     public String getPrenom() {
@@ -201,7 +227,12 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
             return ModeActivite.TRAVAILLER;
         }else
         {
-            return ModeActivite.ETUDIER;
+            if(getUniversite() != null && getUniversite().ouverte()) {
+                return ModeActivite.ETUDIER;
+            }else
+            {
+                return ModeActivite.VISITER;
+            }
         }
     }
     public void comportement()
@@ -210,24 +241,30 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         {
             case REPOS:
                 rentrerDomicile();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case MANGER:
                 manger();
                 break;
             case ATTENDRE:
                 attendre();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case VISITER:
                 partirVisiter();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case TRAVAILLER:
                 partirTravailler();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case ETUDIER:
                 partirEtudier();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case ACHETER:
                 partirAcheter();
+                deEquiper(FamillesMarchandises.ALIMENTAIRE);
                 break;
         }
     }
@@ -405,7 +442,12 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     {
         super.Update(dt);
         if(!isMort()) {
-            modeActiviteVoulu = choisirComportement();
+            cooldown-=dt;
+            if(cooldown<0)
+            {
+                cooldown = ConstantesEco.cooldown_actions;
+                modeActiviteVoulu = choisirComportement();
+            }
             comportement();
             userEquipementPorte(dt);
             deplacer(dt);
@@ -437,26 +479,41 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         if(residence==null)
         {
             List<Residence> res = Monde.trouverResidencesPossibles(this);
-            Residence chosie = res.get(Fonctions.r.nextInt(res.size()));
-            chosie.emmenager(this);
+            if(res.size()>0) {
+                Residence choisie;
+                if(poste == null) {
+                    choisie = res.get(Fonctions.r.nextInt(res.size()));
+                }else
+                {
+                    choisie = res.stream().min(Comparator.
+                            comparingDouble(x -> x.getPoint().distance(poste.getEntreprise().getPoint()))).get();
+                }
+                choisie.emmenager(this);
+            }
         }
         if(poste==null || getTravail() == null)
         {
             List<Poste> res = Monde.trouverPostesPossibles(this);
-            Poste chosi = res.get(Fonctions.r.nextInt(res.size()));
-            chosi.recruter(this);
+            if(res.size()>0) {
+                Poste choisi = res.stream().max(Comparator.comparingDouble(x -> x.getSalaire())).get();
+                choisi.recruter(this);
+            }
         }
         if(universite==null)
         {
             List<Universite> res = Monde.trouverUniversitesPossibles(this);
-            Universite chosie = res.get(Fonctions.r.nextInt(res.size()));
-            chosie.inscrire(this);
+            if(res.size()>0) {
+                Universite chosie = res.get(Fonctions.r.nextInt(res.size()));
+                chosie.inscrire(this);
+            }
         }
         if(banque==null)
         {
             List<Banque> res = Monde.trouverBanquesPossibles(this);
-            Banque chosie = res.get(Fonctions.r.nextInt(res.size()));
-            chosie.sInscrire(this);
+            if(res.size()>0) {
+                Banque chosie = res.get(Fonctions.r.nextInt(res.size()));
+                chosie.sInscrire(this);
+            }
         }
     }
     public void supprimer()

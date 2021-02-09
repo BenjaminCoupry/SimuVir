@@ -30,4 +30,9 @@ public class HitboxCercle implements Hitbox{
         double teta = Math.PI*2.0*Fonctions.r.nextDouble();
         return new Point2D.Double(x0+ray*Math.cos(teta),y0+ray*Math.sin(teta));
     }
+
+    @Override
+    public double getLongueur() {
+        return r;
+    }
 }

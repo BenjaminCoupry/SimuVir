@@ -126,7 +126,6 @@ public class Entreprise extends LieuPhysique implements Monetaire, DtListener, J
 
     @Override
     public void jourPasse(double dt) {
-        super.jourPasse(dt);
         payerSalaires();
     }
 }

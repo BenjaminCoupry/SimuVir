@@ -4,11 +4,13 @@ public class BesoinsHabitant {
     double nourriture;
     double loisir;
     double energie;
-    public BesoinsHabitant()
+    Habitant hab;
+    public BesoinsHabitant(Habitant hab)
     {
         nourriture = 100;
         loisir = 100;
         energie =100;
+        this.hab=hab;
     }
     //TODO vieillir plus vite en fonction de la qualite de vie
     private double clamp(double x)

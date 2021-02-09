@@ -23,12 +23,18 @@ public class Poste {
         this.horaires = horaires;
     }
 
-    public Poste(double salaire, double importance, List<Connaissance> connaissancesRequises, Habitant occupant, HoraireTravail horaires) {
+    public Poste(double salaire, double importance, List<Connaissance> connaissancesRequises, HoraireTravail horaires) {
         this.salaire = salaire;
         this.importance = importance;
         this.connaissancesRequises = connaissancesRequises;
-        this.occupant = occupant;
+        this.occupant = null;
         this.horaires = horaires;
+    }
+
+    public void attribuer(Entreprise e)
+    {
+        entreprise = e;
+        e.getPostes().add(this);
     }
 
     public boolean peutPostuler(Habitant hab)

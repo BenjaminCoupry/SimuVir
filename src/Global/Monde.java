@@ -11,7 +11,7 @@ import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
-import Global.SrcEconomie.Entreprises.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcEconomie.Vie.Habitant;
@@ -43,6 +43,10 @@ public class Monde {
         if(!virusExistants.containsKey(virus.getNom())) {
             virusExistants.put(virus.getNom(),virus);
         }
+    }
+    public static Virus getVirus(String nom)
+    {
+        return virusExistants.get(nom);
     }
     public static void addJourListener(JourListener jl)
     {
@@ -100,6 +104,15 @@ public class Monde {
     {
         lieuxPhysiques.add(l);
         lieuPlace.put(l.getPlace(),l);
+        if(l instanceof JourListener)
+        {
+            addJourListener((JourListener) l);
+        }
+        if(l instanceof DtListener)
+        {
+            addDtListener((DtListener) l);
+        }
+
     }
     public static void ajouterHabitant(Habitant hab)
     {

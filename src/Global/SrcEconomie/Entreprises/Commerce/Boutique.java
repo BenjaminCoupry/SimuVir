@@ -5,13 +5,13 @@ import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
-import Global.SrcEconomie.Entreprises.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.Entreprises.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.LinkedList;

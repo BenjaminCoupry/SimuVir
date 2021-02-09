@@ -2,6 +2,7 @@ package Global.SrcEconomie.Hitboxes;
 
 import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
+import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.JourListener;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
@@ -13,7 +14,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LieuPhysique extends Lieu implements JourListener {
+public class LieuPhysique extends Lieu implements DtListener {
     List<LieuPhysique> adjacents;
     Place place;
     Hitbox hitbox;
@@ -59,6 +60,18 @@ public class LieuPhysique extends Lieu implements JourListener {
     {
         return place.getY();
     }
+
+    public void setX(double x)
+    {
+        place.setX(x);
+        hitbox.setX(x);
+    }
+    public void setY(double y)
+    {
+        place.setY(y);
+        hitbox.setY(y);
+    }
+
     public void setAdjacents(List<LieuPhysique> adjacents) {
         this.adjacents = adjacents;
     }
@@ -102,12 +115,13 @@ public class LieuPhysique extends Lieu implements JourListener {
         return tempsTraversee;
     }
 
-    @Override
-    public void jourPasse(double dt) {
-        super.transmettre(dt);
-    }
 
     public Hitbox getHitbox() {
         return hitbox;
+    }
+
+    @Override
+    public void Update(double dt) {
+        super.transmettre(dt);
     }
 }

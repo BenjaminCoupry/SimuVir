@@ -1,8 +1,5 @@
 package Global.SrcEconomie.Entreprises.Industrie;
 
-import Global.SrcEconomie.Entreprises.Marchandises;
-import Global.SrcEconomie.Entreprises.TypeMarchandise;
-
 public class UsageMarchandise {
     TypeMarchandise typeMarchandise;
     int nbUsage;

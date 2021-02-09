@@ -1,4 +1,4 @@
-package Global.SrcEconomie.Entreprises;
+package Global.SrcEconomie.Entreprises.Industrie;
 
 public class Marchandise {
     TypeMarchandise typeMarchandise;

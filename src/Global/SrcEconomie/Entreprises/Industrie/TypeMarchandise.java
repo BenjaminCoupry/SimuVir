@@ -1,4 +1,4 @@
-package Global.SrcEconomie.Entreprises;
+package Global.SrcEconomie.Entreprises.Industrie;
 
 import java.util.HashMap;
 import java.util.List;
