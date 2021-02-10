@@ -35,4 +35,24 @@ public class HitboxCercle implements Hitbox{
     public double getLongueur() {
         return r;
     }
+
+    @Override
+    public void setX(double x) {
+        x0=x;
+    }
+
+    @Override
+    public void setY(double y) {
+        y0=y;
+    }
+
+    @Override
+    public double getX() {
+        return x0;
+    }
+
+    @Override
+    public double getY() {
+        return y0;
+    }
 }

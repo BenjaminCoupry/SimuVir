@@ -1,14 +1,14 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 
 public class OrdreTransport {
     Stockage depart;
     Stockage arrivee;
-    TypeMarchandise typeMarchandise;
+    Marchandise typeMarchandise;
     StatutLivraison statut;
 
-    public OrdreTransport(Stockage depart, Stockage arrivee, TypeMarchandise typeMarchandise, StatutLivraison statut) {
+    public OrdreTransport(Stockage depart, Stockage arrivee, Marchandise typeMarchandise, StatutLivraison statut) {
         this.depart = depart;
         this.arrivee = arrivee;
         this.typeMarchandise = typeMarchandise;
@@ -31,11 +31,11 @@ public class OrdreTransport {
         this.arrivee = arrivee;
     }
 
-    public TypeMarchandise getTypeMarchandise() {
+    public Marchandise getTypeMarchandise() {
         return typeMarchandise;
     }
 
-    public void setTypeMarchandise(TypeMarchandise typeMarchandise) {
+    public void setTypeMarchandise(Marchandise typeMarchandise) {
         this.typeMarchandise = typeMarchandise;
     }
 

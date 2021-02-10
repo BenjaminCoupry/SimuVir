@@ -4,7 +4,7 @@ import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
-import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;

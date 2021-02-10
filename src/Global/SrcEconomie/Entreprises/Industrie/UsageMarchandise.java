@@ -1,19 +1,21 @@
 package Global.SrcEconomie.Entreprises.Industrie;
 
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
+
 public class UsageMarchandise {
-    TypeMarchandise typeMarchandise;
+    Marchandise typeMarchandise;
     int nbUsage;
 
-    public UsageMarchandise(int nbUsage, Marchandises m) {
+    public UsageMarchandise(int nbUsage, Marchandise m) {
         this.nbUsage = nbUsage;
-        typeMarchandise = TypeMarchandise.get(m);
+        typeMarchandise = m;
     }
 
-    public TypeMarchandise getTypeMarchandise() {
+    public Marchandise getTypeMarchandise() {
         return typeMarchandise;
     }
 
-    public void setTypeMarchandise(TypeMarchandise typeMarchandise) {
+    public void setTypeMarchandise(Marchandise typeMarchandise) {
         this.typeMarchandise = typeMarchandise;
     }
 

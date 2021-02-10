@@ -11,6 +11,8 @@ public final class ConstantesEco {
     public static final double difficulte_formation = 50;
     public static final double cooldown_actions = 0.5;
 
+    public static final double taille_individu = 0.5;
+
     public static final double temps_prod_agricole = 2;
     public static final double temps_prod_aliment = 3;
 

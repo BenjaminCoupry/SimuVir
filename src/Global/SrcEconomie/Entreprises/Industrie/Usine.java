@@ -3,6 +3,7 @@ package Global.SrcEconomie.Entreprises.Industrie;
 import Global.Monde;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Hitboxes.Hitbox;
@@ -31,15 +32,15 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
 
     }
 
-    public List<TypeMarchandise> trouverElementsManquants()
+    public List<Marchandise> trouverElementsManquants()
     {
         List<UsageMarchandise> usages = recette.getConsommation();
-        List<TypeMarchandise> necessaires = new ArrayList<>();
+        List<Marchandise> necessaires = new ArrayList<>();
         for(UsageMarchandise um : usages)
         {
             int restant = um.getNbUsage();
             List<Marchandise> mt = entree.stream()
-                    .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                    .filter(march -> march.correspond(um.getTypeMarchandise()))
                     .collect(Collectors.toList());
             for(int i=0;i<restant;i++)
             {
@@ -68,7 +69,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
         {
             int restant = um.getNbUsage();
             List<Marchandise> mt = entree.stream()
-                    .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                    .filter(march -> march.correspond(um.getTypeMarchandise()))
                     .collect(Collectors.toList());
             for(int i=0;i<restant;i++)
             {
@@ -96,7 +97,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
             int restant = um.getNbUsage();
             for(int i=0;i<restant;i++)
             {
-                sortie.add(new Marchandise(um.getTypeMarchandise()));
+                sortie.add(um.getTypeMarchandise().creerInstance());
             }
         }
     }
@@ -113,9 +114,9 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
     }
 
     @Override
-    public Marchandise fournir(TypeMarchandise tm) {
+    public Marchandise fournir(Marchandise tm) {
         List<Marchandise> mt = sortie.stream()
-                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .filter(march -> march.correspond(tm))
                 .collect(Collectors.toList());
         if(mt.size()>0)
         {
@@ -135,15 +136,15 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
     }
 
     @Override
-    public boolean disponible(TypeMarchandise tm) {
+    public boolean disponible(Marchandise tm) {
         List<Marchandise> mt = sortie.stream()
-                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .filter(march -> march.correspond(tm))
                 .collect(Collectors.toList());
         return mt.size()>0;
     }
 
     @Override
-    public double getPrix(TypeMarchandise tm) {
+    public double getPrix(Marchandise tm) {
         return tm.getPrixFournisseur();
     }
 
@@ -153,7 +154,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
         if(Monde.getTransporteurs().size() >0) {
             for (UsageMarchandise um : recette.getConsommation()) {
                 List<Marchandise> mt = entree.stream()
-                        .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                        .filter(march -> march.correspond(um.getTypeMarchandise()))
                         .collect(Collectors.toList());
                 int delta = um.getNbUsage() - mt.size();
                 for (int i = 0; i < delta; i++) {

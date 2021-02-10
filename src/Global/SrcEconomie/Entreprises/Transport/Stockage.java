@@ -1,12 +1,11 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
-import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 
 public interface Stockage {
-    Marchandise fournir(TypeMarchandise tm);
+    Marchandise fournir(Marchandise tm);
     void stocker(Marchandise m);
-    boolean disponible(TypeMarchandise tm);
-    double getPrix(TypeMarchandise tm);
+    boolean disponible(Marchandise tm);
+    double getPrix(Marchandise tm);
     void passerCommandes();
 }

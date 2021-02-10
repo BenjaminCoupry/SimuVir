@@ -5,13 +5,12 @@ import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
-import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.LinkedList;
@@ -28,11 +27,11 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
         this.catalogue = catalogue;
     }
 
-    public boolean peutVendre(TypeMarchandise tm)
+    public boolean peutVendre(Marchandise tm)
     {
         for(Marchandise m : stock)
         {
-            if(m.getTypeMarchandise().equals(tm))
+            if(m.correspond(tm))
             {
                 return true;
             }
@@ -40,35 +39,35 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
         return false;
     }
     @Override
-    public double getPrix(TypeMarchandise tm)
+    public double getPrix(Marchandise tm)
     {
         double marge = 1+ (ConstantesEco.margeMax-1)*getEfficacite();
         return tm.getPrixFournisseur()*marge;
     }
-    public void vendre(TypeMarchandise tm, Habitant hab)
+    public void vendre(Marchandise tm, Habitant hab)
     {
         if(peutVendre(tm))
         {
             double prix = getPrix(tm);
-            getCompteBancaire().prelever(hab.getCompteBancaire(),prix,"Achat "+tm.getName() + " "+getNom());
+            getCompteBancaire().prelever(hab.getCompteBancaire(),prix,"Achat "+getNom());
             Marchandise achat=null;
             for(Marchandise m : stock)
             {
-                if(m.getTypeMarchandise().equals(tm))
+                if(m.correspond(tm))
                 {
                     achat = m;
                     break;
                 }
             }
             stock.remove(achat);
-            hab.getInventaire().add(achat);
+            hab.getInventaire().donner(achat);
         }
     }
 
     @Override
-    public Marchandise fournir(TypeMarchandise tm) {
+    public Marchandise fournir(Marchandise tm) {
         List<Marchandise> mt = stock.stream()
-                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .filter(march -> march.correspond(tm))
                 .collect(Collectors.toList());
         if(mt.size()>0)
         {
@@ -88,9 +87,9 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
     }
 
     @Override
-    public boolean disponible(TypeMarchandise tm) {
+    public boolean disponible(Marchandise tm) {
         List<Marchandise> mt = stock.stream()
-                .filter(march -> march.getTypeMarchandise().equals(tm))
+                .filter(march -> march.correspond(tm))
                 .collect(Collectors.toList());
         return mt.size()>0;
     }
@@ -100,7 +99,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
         if(Monde.getTransporteurs().size() >0) {
             for (UsageMarchandise um : catalogue) {
                 List<Marchandise> mt = stock.stream()
-                        .filter(march -> march.getTypeMarchandise().equals(um.getTypeMarchandise()))
+                        .filter(march -> march.correspond(um.getTypeMarchandise()))
                         .collect(Collectors.toList());
                 int delta = um.getNbUsage() - mt.size();
                 for (int i = 0; i < delta; i++) {
@@ -125,5 +124,9 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
         {
             e.oublier(this);
         }
+    }
+
+    public List<UsageMarchandise> getCatalogue() {
+        return catalogue;
     }
 }

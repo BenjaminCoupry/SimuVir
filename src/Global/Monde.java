@@ -6,12 +6,13 @@ import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Entreprise;
 import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
 import Global.SrcEconomie.Entreprises.Industrie.Usine;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcEconomie.Vie.Habitant;
@@ -57,7 +58,7 @@ public class Monde {
         dtListeners.add(dl);
     }
 
-    public static List<Stockage> trouverDisponibilites(TypeMarchandise tm, TypeDisponibilite dispo)
+    public static List<Stockage> trouverDisponibilites(Marchandise tm, TypeDisponibilite dispo)
     {
         List<Stockage> res = new ArrayList<>();
         for(Stockage sto : getStockages())
@@ -253,6 +254,23 @@ public class Monde {
         return etat;
     }
 
+    public static List<Marchandise> getDansMagasinParFamille(FamillesMarchandises famille) {
+        List<Marchandise> retour = new LinkedList<>();
+        for(Boutique b : getBoutiques())
+        {
+            List<Marchandise> offre = b.getCatalogue().stream().map(um->um.getTypeMarchandise())
+                    .filter(m->m.getFamilles().contains(famille)).collect(Collectors.toList());
+            for(Marchandise m : offre)
+            {
+                if(retour.stream().filter(mr->m.identique(mr)).count()==0)
+                {
+                    retour.add(m);
+                }
+            }
+        }
+        return retour;
+    }
+
     public void Update()
     {
         heure += dt;
@@ -323,6 +341,7 @@ public class Monde {
         Monde.dt = dt;
     }
 
+    //penser a appeler apres l'ajout d'un lieu
     public static void calculerInfoChemins()
     {
         List<Place> placelieu = new LinkedList<>();
@@ -343,5 +362,34 @@ public class Monde {
             l.setInfoChemin(ic);
         }
         lieuPlace_ = lieuPlace_;
+    }
+
+    public static LieuPhysique selectionnerLieu(double x, double y)
+    {
+        List<LieuPhysique> contact = getLieuxPhysiques().stream().filter(lp->lp.getHitbox().contact(x,y))
+                .collect(Collectors.toList());
+        if(contact.size()>0)
+        {
+            return contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
+                    .distance(new Point2D.Double(l.getX(),l.getY())))).get();
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public static Habitant selectionnerHabitant(double x, double y)
+    {
+        List<Habitant> contact = getHabitants().stream().filter(lp->lp.getHitbox().contact(x,y))
+                .collect(Collectors.toList());
+        if(contact.size()>0)
+        {
+            return contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
+                    .distance(l.getPositionActuele()))).get();
+        }
+        else
+        {
+            return null;
+        }
     }
 }

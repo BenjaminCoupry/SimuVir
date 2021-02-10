@@ -10,6 +10,6 @@ public interface Hitbox {
     double getLongueur();
     void setX(double x);
     void setY(double y);
-    void getX();
-    void getY();
+    double getX();
+    double getY();
 }

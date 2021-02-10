@@ -9,12 +9,14 @@ import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
 import Global.SrcEconomie.Entreprises.Finance.Monetaire;
-import Global.SrcEconomie.Entreprises.Industrie.FamillesMarchandises;
-import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.FamillesMarchandises;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
+
 import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
 import Global.SrcEconomie.Entreprises.Transport.Stockage;
 import Global.SrcEconomie.Entreprises.Transport.TypeDisponibilite;
+import Global.SrcEconomie.Hitboxes.Hitbox;
+import Global.SrcEconomie.Hitboxes.HitboxCercle;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcVirus.Fonctions;
@@ -25,7 +27,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Habitant extends Individu implements Monetaire, JourListener,DtListener {
     String prenom;
@@ -34,14 +35,13 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     Universite universite;
     Banque banque;
     List<Connaissance> connaissances;
-    List<Marchandise> inventaire;
-    List<Marchandise> inventaireEquipe;
+
     Poste poste;
     CompteBancaire compteBancaire;
     LieuPhysique position;
     LieuPhysique next;
     LieuPhysique objectif;
-    TypeMarchandise volonteAchat;
+    Marchandise volonteAchat;
     ModeActivite modeActiviteReel;
     ModeActivite modeActiviteVoulu;
     double avancementLieu;
@@ -49,6 +49,8 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     Point2D next_pt;
     Point2D start_pt;
     double cooldown;
+    Inventaire inventaire;
+    Hitbox hitbox;
 
 
     public Habitant(Function<Double, Double> probaMortNaturelle, double age,String prenom,String nomFamille,LieuPhysique position) {
@@ -56,6 +58,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         this.prenom = prenom;
         this.position = position;
         this.nomFamille = nomFamille;
+        hitbox = new HitboxCercle(0,0,ConstantesEco.taille_individu);
         residence = null;
         universite =null;
         banque = null;
@@ -72,9 +75,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         objectif = position;
         next = objectif;
         connaissances = new LinkedList<>();
-        inventaire = new LinkedList<>();
-        inventaireEquipe = new LinkedList<>();
-
+        inventaire = new Inventaire();
     }
     public void apprendre(Connaissance c)
     {
@@ -118,6 +119,13 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         this.residence = residence;
     }
 
+    public Hitbox getHitbox() {
+        Point2D pact = getPositionActuele();
+        hitbox.setX(pact.getX());
+        hitbox.setY(pact.getY());
+        return hitbox;
+    }
+
     public Entreprise getTravail() {
         if(poste == null)
         {
@@ -152,7 +160,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         return compteBancaire;
     }
 
-    public List<Marchandise> getInventaire() {
+    public Inventaire getInventaire() {
         return inventaire;
     }
 
@@ -198,14 +206,14 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         if(besoins.affame())
         {
 
-            if (peutEquiper(FamillesMarchandises.ALIMENTAIRE) || estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
+            if (inventaire.peutEquiperFamille(FamillesMarchandises.ALIMENTAIRE) || inventaire.estEquipeFamille(FamillesMarchandises.ALIMENTAIRE)) {
                 return ModeActivite.MANGER;
             }
             else
             {
                 if (volonteAchat == null || !(volonteAchat.getFamilles().contains(FamillesMarchandises.ALIMENTAIRE))) {
-                    List<TypeMarchandise> nourriture = TypeMarchandise.getParFamille(FamillesMarchandises.ALIMENTAIRE);
-                    TypeMarchandise tm = nourriture.get(Fonctions.r.nextInt(nourriture.size()));
+                    List<Marchandise> nourriture = Monde.getDansMagasinParFamille(FamillesMarchandises.ALIMENTAIRE);
+                    Marchandise tm = nourriture.get(Fonctions.r.nextInt(nourriture.size()));
                     volonteAchat = tm;
                 }
                 return ModeActivite.ACHETER;
@@ -241,30 +249,30 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         {
             case REPOS:
                 rentrerDomicile();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case MANGER:
                 manger();
                 break;
             case ATTENDRE:
                 attendre();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case VISITER:
                 partirVisiter();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case TRAVAILLER:
                 partirTravailler();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case ETUDIER:
                 partirEtudier();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
             case ACHETER:
                 partirAcheter();
-                deEquiper(FamillesMarchandises.ALIMENTAIRE);
+                inventaire.deEquiperFamille(FamillesMarchandises.ALIMENTAIRE);
                 break;
         }
     }
@@ -358,10 +366,10 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     }
     public void manger()
     {
-        if(!estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
-            equiper(FamillesMarchandises.ALIMENTAIRE);
+        if(!inventaire.estEquipeFamille(FamillesMarchandises.ALIMENTAIRE)) {
+            inventaire.equiperFamille(FamillesMarchandises.ALIMENTAIRE);
         }
-        if(estEquipe(FamillesMarchandises.ALIMENTAIRE)) {
+        if(inventaire.estEquipeFamille(FamillesMarchandises.ALIMENTAIRE)) {
             if (residence != null) {
                 modeActiviteReel = ModeActivite.MANGER;
                 objectif = residence;
@@ -376,64 +384,8 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         }
     }
 
-    public void equiper(TypeMarchandise tm)
-    {
-        List<Marchandise> possib = inventaire.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.toList());
-        if(possib.size()>0) {
-            Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
-            inventaire.remove(choix);
-            inventaireEquipe.add(choix);
-        }
-    }
-    public void equiper(FamillesMarchandises fm)
-    {
-        List<Marchandise> possib = inventaire.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
-                .collect(Collectors.toList());
-        if(possib.size()>0) {
-            Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
-            inventaire.remove(choix);
-            inventaireEquipe.add(choix);
-        }
-    }
-    public boolean estEquipe(TypeMarchandise tm)
-    {
-        long possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.counting());
-        return possib >0;
-    }
-    public boolean estEquipe(FamillesMarchandises fm)
-    {
-        long possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
-                .collect(Collectors.counting());
-        return possib >0;
-    }
-    public boolean peutEquiper(TypeMarchandise tm)
-    {
-        long possib = inventaire.stream().filter(m->m.getTypeMarchandise().equals(tm)).collect(Collectors.counting());
-        return possib >0;
-    }
-    public boolean peutEquiper(FamillesMarchandises fm)
-    {
-        long possib = inventaire.stream().filter(m->m.getTypeMarchandise().getFamilles().contains(fm))
-                .collect(Collectors.counting());
-        return possib >0;
-    }
-    public void deEquiper(TypeMarchandise tm)
-    {
-        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise().equals(tm))
-                .collect(Collectors.toList());
 
-        inventaireEquipe.removeAll(possib);
-        inventaire.addAll(possib);
-    }
-    public void deEquiper(FamillesMarchandises fm)
-    {
-        List<Marchandise> possib = inventaireEquipe.stream().filter(m->m.getTypeMarchandise()
-                .getFamilles().contains(fm))
-                .collect(Collectors.toList());
 
-        inventaireEquipe.removeAll(possib);
-        inventaire.addAll(possib);
-    }
 
 
 
@@ -449,7 +401,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
                 modeActiviteVoulu = choisirComportement();
             }
             comportement();
-            userEquipementPorte(dt);
+            inventaire.userEquipementPorte(dt);
             deplacer(dt);
             besoins.update(dt, modeActiviteReel);
         }
@@ -459,21 +411,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         }
     }
 
-    public void userEquipementPorte(double dt)
-    {
-        List<Marchandise> detruit = new LinkedList<>();
-        for(Marchandise m : inventaireEquipe)
-        {
-            if(!m.user(dt))
-            {
-                detruit.add(m);
-            }
-        }
-        for(Marchandise m : detruit)
-        {
-            inventaireEquipe.remove(m);
-        }
-    }
+
     public void trouverAffectations()
     {
         if(residence==null)

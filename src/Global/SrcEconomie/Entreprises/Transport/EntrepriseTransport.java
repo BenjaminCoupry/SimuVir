@@ -4,13 +4,12 @@ import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.Entreprises.Entreprise;
-import Global.SrcEconomie.Entreprises.Industrie.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.JourListener;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcVirus.Fonctions;
 
 import java.util.HashMap;
@@ -96,7 +95,7 @@ public class EntrepriseTransport extends Entreprise implements DtListener, JourL
             }
         }
     }
-    public void passerCommande(Stockage client, TypeMarchandise tm)
+    public void passerCommande(Stockage client, Marchandise tm)
     {
         if(client instanceof Entreprise) {
             Entreprise eClient = (Entreprise)client;

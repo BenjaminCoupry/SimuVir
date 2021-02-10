@@ -9,9 +9,9 @@ import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireCompose;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireSimple;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireTravail;
-import Global.SrcEconomie.Entreprises.Industrie.Marchandises;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Ble;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Pain;
 import Global.SrcEconomie.Entreprises.Industrie.RecetteIndustrie;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
 import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
 import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Hitboxes.Hitbox;
@@ -180,19 +180,19 @@ public class Architecte {
     public static RecetteIndustrie getRecetteAgricole()
     {
         List<UsageMarchandise> tm = new LinkedList<>();
-        tm.add(new UsageMarchandise(1,Marchandises.ALIMENTS_CRUS));
+        tm.add(new UsageMarchandise(1,new Ble()));
         return new RecetteIndustrie(new LinkedList<>(),tm,ConstantesEco.temps_prod_agricole);
     }
     public static RecetteIndustrie getRecetteAlimentaire()
     {
         List<UsageMarchandise> tm = new LinkedList<>();
-        tm.add(new UsageMarchandise(2,Marchandises.ALIMENTS_CRUS));
+        tm.add(new UsageMarchandise(2,new Ble()));
         List<UsageMarchandise> tm2 = new LinkedList<>();
-        tm.add(new UsageMarchandise(1,Marchandises.REPAS));
+        tm.add(new UsageMarchandise(1,new Pain()));
         return new RecetteIndustrie(tm,tm2,ConstantesEco.temps_prod_aliment);
     }
 
-    public static Universite getUniv(TypeConnaissance tc, int level)
+    public static Universite getUniversite(TypeConnaissance tc, int level)
     {
         Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleUniversite);
         double trav = ConstantesEco.tailleUniversite/ConstantesEco.vitesse_marche;
@@ -207,5 +207,6 @@ public class Architecte {
         }
         return u;
     }
+    //TODO finaliser
 
 }

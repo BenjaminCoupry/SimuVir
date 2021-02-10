@@ -1,14 +1,15 @@
 package Global.SrcEconomie.Entreprises.Transport;
 
 import Global.SrcEconomie.Entreprises.Finance.CompteBancaire;
-import Global.SrcEconomie.Entreprises.Industrie.TypeMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
+
 
 public class Commande {
     Stockage destination;
-    TypeMarchandise typeMarchandise;
+    Marchandise typeMarchandise;
     CompteBancaire paiement;
 
-    public Commande(Stockage destination, TypeMarchandise typeMarchandise, CompteBancaire paiement) {
+    public Commande(Stockage destination, Marchandise typeMarchandise, CompteBancaire paiement) {
         this.destination = destination;
         this.typeMarchandise = typeMarchandise;
         this.paiement = paiement;
@@ -22,11 +23,11 @@ public class Commande {
         this.destination = destination;
     }
 
-    public TypeMarchandise getTypeMarchandise() {
+    public Marchandise getTypeMarchandise() {
         return typeMarchandise;
     }
 
-    public void setTypeMarchandise(TypeMarchandise typeMarchandise) {
+    public void setTypeMarchandise(Marchandise typeMarchandise) {
         this.typeMarchandise = typeMarchandise;
     }
 
