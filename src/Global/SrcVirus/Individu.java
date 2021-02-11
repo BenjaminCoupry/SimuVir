@@ -2,8 +2,10 @@ package Global.SrcVirus;
 
 import Global.Monde;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 public class Individu {
     HashMap<String,Immunite> immunites;
     HashMap<String,Infection> infections;
+    HashMap<String,List<Individu>> sourceInfection;
     Function<Double,Double> probaMortNaturelle;
     double age;
     boolean mort;
@@ -25,6 +28,7 @@ public class Individu {
         this.protectionEmission=0;
         this.immunites = new HashMap<>();
         this.infections = new HashMap<>();
+        this.sourceInfection = new HashMap<>();
     }
 
     public double getSoins() {
@@ -175,7 +179,7 @@ public class Individu {
         for (Infection inf : infections.values()) {
             double p = modificateurTransmission * inf.getPotentielTransmission(distance);
             if (Fonctions.r.nextDouble() < p) {
-                cible.Infecter(inf.getVirus().muter());
+                cible.Infecter(inf.getVirus().muter(),this);
             }
         }
     }
@@ -197,7 +201,7 @@ public class Individu {
         }
     }
 
-    public void Infecter(Virus v)
+    public void Infecter(Virus v, Individu origine)
     {
         Monde.referencerVirus(v);
         double immNative = calculerImmuniteNative(v);
@@ -206,6 +210,11 @@ public class Individu {
             immunites.put(v.getNom(), imnew);
             Infection infnew = new Infection(v, imnew, ConstantesVirus.chargeViraleInitaile, this);
             infections.put(v.getNom(), infnew);
+            if(origine!=null) {
+                List<Individu> chaine = new LinkedList<>();
+                chaine.add(origine);
+                sourceInfection.put(v.getNom(),chaine);
+            }
         }
         else
         {
@@ -213,6 +222,13 @@ public class Individu {
             infActuelle.setChargeVirale(Math.max(infActuelle.getChargeVirale(), ConstantesVirus.chargeViraleInitaile));
             Immunite immuniteActuelle = immunites.get(v.getNom());
             immuniteActuelle.setActivite(Math.max(immuniteActuelle.getActivite(),immNative));
+            if(origine != null) {
+                List<Individu> chaine = sourceInfection.get(v.getNom());
+                if(!chaine.contains(origine))
+                {
+                    chaine.add(origine);
+                }
+            }
         }
 
     }

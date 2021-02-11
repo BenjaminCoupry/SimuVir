@@ -89,6 +89,18 @@ public class Banque extends Entreprise implements DtListener, JourListener {
         super.oublier(hab);
         comptes.remove(hab);
     }
+    @Override
+    public void supprimer()
+    {
+        super.supprimer();
+        for(Monetaire m : comptes.keySet())
+        {
+            if(m instanceof Habitant)
+            {
+                ((Habitant) m).setBanque(null);
+            }
+        }
+    }
 
 
     public double getFrais() {

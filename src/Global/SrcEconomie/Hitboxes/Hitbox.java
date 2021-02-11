@@ -7,6 +7,7 @@ public interface Hitbox {
     boolean contact(double x, double y);
     double getSurface();
     Point2D getRandomPoint();
+    Point2D getPoint();
     double getLongueur();
     void setX(double x);
     void setY(double y);

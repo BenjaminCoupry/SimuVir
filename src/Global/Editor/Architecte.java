@@ -1,4 +1,4 @@
-package Global.SrcEconomie.Voierie;
+package Global.Editor;
 
 import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
@@ -17,6 +17,8 @@ import Global.SrcEconomie.Entreprises.Poste;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.Hitboxes.HitboxCercle;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
+import Global.SrcEconomie.Vie.Habitant;
+import Global.SrcEconomie.Voierie.Route;
 import Global.SrcVirus.Lieu;
 import PathFinding.Place;
 import sun.misc.FormattedFloatingDecimal;
@@ -28,12 +30,84 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Architecte {
+    public static EditMode editmod;
+    public static LieuPhysique aPoser;
+    public static Selectionnable selectionne;
+    public static Point2D ptA;
+    public static Point2D ptB;
+
+    public static void clique(double x, double y)
+    {
+        if(editmod.equals(editmod.PLACER))
+        {
+            if(aPoser!= null) {
+                aPoser.setX(x);
+                aPoser.setY(y);
+                poserSurRoute(aPoser);
+                aPoser = null;
+            }
+        }
+        if(editmod.equals(editmod.SUPPRIMER))
+        {
+            Selectionnable lp = Monde.selectionner(x,y);
+            if(lp != null)
+            {
+                if(lp instanceof LieuPhysique) {
+                    ((LieuPhysique) lp).supprimer();
+                }else if (lp instanceof Habitant)
+                {
+                    ((Habitant) lp).supprimer();
+                }
+            }
+
+        }
+        if(editmod.equals(editmod.SELECTION))
+        {
+            selectionne = Monde.selectionner(x,y);
+        }
+        if(editmod.equals(editmod.ROUTE))
+        {
+            if(ptA == null)
+            {
+                ptA = new Point2D.Double(x,y);
+            }else
+            {
+                if(ptB==null)
+                {
+                    ptB = new Point2D.Double(x,y);
+                    LieuPhysique la = Monde.selectionnerLieu(ptA.getX(),ptA.getY());
+                    LieuPhysique lb = Monde.selectionnerLieu(x,y);
+                    if(la != null && lb != null)
+                    {
+                        tirerRoute(la,lb);
+                    }else if(la == null && lb != null)
+                    {
+                        tirerRoute(ptA,lb);
+                    }
+                    else if(la != null && lb == null)
+                    {
+                        tirerRoute(la,ptB);
+                    }
+                    else if(la == null && lb == null)
+                    {
+                        tirerRoute(ptA,ptB);
+                    }
+
+                }
+            }
+        }
+    }
+
     public static Route poserRoute(double x, double y)
     {
         Route nouv = new Route(new HitboxCercle(x,y,ConstantesEco.taille_route),
                 ConstantesEco.taille_route/ConstantesEco.vitesse_marche,x,y);
-        Monde.ajouterLieu(nouv);
-        return nouv;
+        if(poser(nouv)) {
+            return nouv;
+        }else
+        {
+            return null;
+        }
     }
     public static List<LieuPhysique> tirerRoute(Point2D A, Point2D B)
     {
@@ -48,12 +122,17 @@ public class Architecte {
                 double x = A.getX()*(1-k)+B.getX()*k;
                 double y = A.getY()*(1-k)+B.getY()*k;
                 Route nv = poserRoute(x,y);
-                route.add(nv);
-                if(last!= null)
+                if(nv != null) {
+                    route.add(nv);
+
+                    if (last != null) {
+                        nv.connecter(last);
+                    }
+                    last = nv;
+                }else
                 {
-                    nv.connecter(last);
+                    last = null;
                 }
-                last = nv;
             }
         }
         return route;
@@ -88,13 +167,19 @@ public class Architecte {
         Route pp = Monde.getRoutePlusProche(l.getPoint());
         if(pp!=null)
         {
-            pp.connecter(l);
+            if(pp.getPoint().distance(l.getPoint())<=ConstantesEco.dist_connexion_route) {
+                pp.connecter(l);
+            }
         }
         poser(l);
     }
-    public static void poser(LieuPhysique l)
+    public static boolean poser(LieuPhysique l)
     {
-        Monde.ajouterLieu(l);
+        if(Monde.selectionnerLieu(l.getX(),l.getY()) ==null) {
+            Monde.ajouterLieu(l);
+            return true;
+        }
+        return false;
     }
 
     public static HoraireTravail getMatinale()

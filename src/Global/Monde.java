@@ -1,5 +1,6 @@
 package Global;
 
+import Global.Editor.Selectionnable;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
@@ -372,6 +373,25 @@ public class Monde {
         {
             return contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
                     .distance(new Point2D.Double(l.getX(),l.getY())))).get();
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public static Selectionnable selectionner(double x, double y)
+    {
+        List<Selectionnable> contact_l = getLieuxPhysiques().stream().filter(lp->lp.getHitbox().contact(x,y))
+                .collect(Collectors.toList());
+        List<Selectionnable> contact_h = getHabitants().stream().filter(lp->lp.getHitbox().contact(x,y))
+                .collect(Collectors.toList());
+        List<Selectionnable> contact = new LinkedList<>();
+        contact.addAll(contact_h);
+        contact.addAll(contact_l);
+        if(contact.size()>0)
+        {
+            return contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
+                    .distance(l.getHitbox().getPoint()))).get();
         }
         else
         {

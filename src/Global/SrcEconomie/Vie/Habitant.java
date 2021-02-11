@@ -1,5 +1,6 @@
 package Global.SrcEconomie.Vie;
 
+import Global.Editor.Selectionnable;
 import Global.Monde;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.*;
@@ -28,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-public class Habitant extends Individu implements Monetaire, JourListener,DtListener {
+public class Habitant extends Individu implements Monetaire, JourListener,DtListener, Selectionnable {
     String prenom;
     String nomFamille;
     Residence residence;
@@ -484,6 +485,10 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
 
     public String getNomFamille() {
         return nomFamille;
+    }
+
+    public void setBanque(Banque banque) {
+        this.banque = banque;
     }
 }
 

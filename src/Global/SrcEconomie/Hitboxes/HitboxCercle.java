@@ -32,6 +32,11 @@ public class HitboxCercle implements Hitbox{
     }
 
     @Override
+    public Point2D getPoint() {
+        return new Point2D.Double(getX(),getY());
+    }
+
+    @Override
     public double getLongueur() {
         return r;
     }

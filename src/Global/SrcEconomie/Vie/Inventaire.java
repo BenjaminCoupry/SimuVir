@@ -67,6 +67,43 @@ public class Inventaire {
         inventaireEquipe.removeAll(possib);
         inventaire.addAll(possib);
     }
+
+    private List<Marchandise> getMarchandiseType(Marchandise fm, List<Marchandise> source)
+    {
+        List<Marchandise> possib = source.stream().filter(m->m.correspond(fm))
+                .collect(Collectors.toList());
+        return possib;
+    }
+    public void equiperType(Marchandise fm)
+    {
+        List<Marchandise> possib =getMarchandiseType(fm,inventaire);
+        if(possib.size()>0) {
+            Marchandise choix = possib.get(Fonctions.r.nextInt(possib.size()));
+            inventaire.remove(choix);
+            inventaireEquipe.add(choix);
+        }
+    }
+
+    public boolean estEquipeType(Marchandise fm)
+    {
+        long possib = getMarchandiseType(fm,inventaireEquipe).size();
+        return possib >0;
+    }
+
+    public boolean peutEquiperType(Marchandise fm)
+    {
+        long possib = getMarchandiseType(fm,inventaire).size();
+        return possib >0;
+    }
+
+    public void deEquiperType(Marchandise fm)
+    {
+        List<Marchandise> possib = getMarchandiseType(fm,inventaireEquipe);
+
+        inventaireEquipe.removeAll(possib);
+        inventaire.addAll(possib);
+    }
+
     public void donner(Marchandise m)
     {
         inventaire.add(m);
