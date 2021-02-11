@@ -19,6 +19,7 @@ public class Individu {
     boolean mort;
     double soins;
     double protectionEmission;
+    double protectionReception;
 
     public Individu(Function<Double, Double> probaMortNaturelle, double age) {
         this.probaMortNaturelle = probaMortNaturelle;
@@ -177,7 +178,7 @@ public class Individu {
     public void transmettreInfections(Individu cible, double modificateurTransmission, double distance)
     {
         for (Infection inf : infections.values()) {
-            double p = modificateurTransmission * inf.getPotentielTransmission(distance);
+            double p = modificateurTransmission * inf.getPotentielTransmission(distance,cible.getProtectionReception());
             if (Fonctions.r.nextDouble() < p) {
                 cible.Infecter(inf.getVirus().muter(),this);
             }
@@ -234,4 +235,11 @@ public class Individu {
     }
 
 
+    public double getProtectionReception() {
+        return protectionReception;
+    }
+
+    public void setProtectionReception(double protectionReception) {
+        this.protectionReception = protectionReception;
+    }
 }

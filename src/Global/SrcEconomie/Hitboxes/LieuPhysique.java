@@ -105,7 +105,6 @@ public class LieuPhysique extends Lieu implements DtListener, Selectionnable {
     }
     public void supprimer()
     {
-        Monde.getLieuxPhysiques().remove(this);
         for(LieuPhysique adj : getAdjacents())
         {
             adj.getAdjacents().remove(this);

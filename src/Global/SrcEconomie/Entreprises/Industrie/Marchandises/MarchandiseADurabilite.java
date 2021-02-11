@@ -18,7 +18,7 @@ public abstract class MarchandiseADurabilite extends Marchandise{
 
     @Override
     public List<FamillesMarchandises> getFamilles() {
-        List<FamillesMarchandises> fm= new LinkedList<>();
+        List<FamillesMarchandises> fm= super.getFamilles();
         fm.add(FamillesMarchandises.USABLE);
         return fm;
     }

@@ -12,7 +12,7 @@ public abstract class MarchandiseInfinie extends Marchandise{
 
     @Override
     public List<FamillesMarchandises> getFamilles() {
-        List<FamillesMarchandises> fm= new LinkedList<>();
+        List<FamillesMarchandises> fm= super.getFamilles();
         fm.add(FamillesMarchandises.DURABLE);
         return fm;
     }

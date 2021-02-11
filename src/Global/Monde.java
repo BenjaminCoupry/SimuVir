@@ -39,6 +39,13 @@ public class Monde {
     static List<JourListener> jourListeners;
     static List<DtListener> dtListeners;
 
+    static List<Marchandise> obligatoires;
+    static boolean pathToUpdate;
+
+
+    public static List<Marchandise> getObligatoires() {
+        return obligatoires;
+    }
 
 
     public static void referencerVirus(Virus virus) {
@@ -104,6 +111,7 @@ public class Monde {
 
     public static void ajouterLieu(LieuPhysique l)
     {
+        pathToUpdate = true;
         lieuxPhysiques.add(l);
         lieuPlace.put(l.getPlace(),l);
         if(l instanceof JourListener)
@@ -116,9 +124,20 @@ public class Monde {
         }
 
     }
+    public static void supprimerLieu(LieuPhysique l)
+    {
+        pathToUpdate = true;
+        l.supprimer();
+        lieuxPhysiques.remove(l);
+    }
     public static void ajouterHabitant(Habitant hab)
     {
         habitants.add(hab);
+    }
+    public static void supprimerHabitant(Habitant hab)
+    {
+        hab.supprimer();
+        habitants.remove(hab);
     }
 
     public static List<Poste> trouverPostesPossibles(Habitant hab)
@@ -345,24 +364,25 @@ public class Monde {
     //penser a appeler apres l'ajout d'un lieu
     public static void calculerInfoChemins()
     {
-        List<Place> placelieu = new LinkedList<>();
-        HashMap<Place,LieuPhysique> lieuPlace_ = new HashMap<>();
-        List<ArcPhysique> arcs = new LinkedList<>();
-        for(LieuPhysique l : lieuxPhysiques)
-        {
-            placelieu.add(l.getPlace());
-            lieuPlace_.put(l.getPlace(),l);
-            for(LieuPhysique l2 : l.getAdjacents()) {
-                ArcPhysique arc = new ArcPhysique(l.getPlace(),l2.getPlace() , 1);
-                arcs.add(arc);
+        if(pathToUpdate) {
+            pathToUpdate = false;
+            List<Place> placelieu = new LinkedList<>();
+            HashMap<Place, LieuPhysique> lieuPlace_ = new HashMap<>();
+            List<ArcPhysique> arcs = new LinkedList<>();
+            for (LieuPhysique l : lieuxPhysiques) {
+                placelieu.add(l.getPlace());
+                lieuPlace_.put(l.getPlace(), l);
+                for (LieuPhysique l2 : l.getAdjacents()) {
+                    ArcPhysique arc = new ArcPhysique(l.getPlace(), l2.getPlace(), 1);
+                    arcs.add(arc);
+                }
             }
+            for (LieuPhysique l : lieuxPhysiques) {
+                InfoChemin ic = PathFinder.calculerDistances(arcs, l.getPlace());
+                l.setInfoChemin(ic);
+            }
+            lieuPlace = lieuPlace_;
         }
-        for(LieuPhysique l : lieuxPhysiques)
-        {
-            InfoChemin ic = PathFinder.calculerDistances(arcs,l.getPlace());
-            l.setInfoChemin(ic);
-        }
-        lieuPlace_ = lieuPlace_;
     }
 
     public static LieuPhysique selectionnerLieu(double x, double y)

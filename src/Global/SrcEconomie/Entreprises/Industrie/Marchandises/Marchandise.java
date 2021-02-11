@@ -1,12 +1,23 @@
 package Global.SrcEconomie.Entreprises.Industrie.Marchandises;
 
+import Global.Monde;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Marchandise {
     public abstract boolean user(double dt);
-    public abstract List<FamillesMarchandises> getFamilles();
+    public List<FamillesMarchandises> getFamilles()
+    {
+        List<FamillesMarchandises> f = new LinkedList<>();
+        if(Monde.getObligatoires().stream().anyMatch(m->m.accepte(this)))
+        {
+            f.add(FamillesMarchandises.OBLIGATOIRE);
+        }
+        return f;
+    }
     public abstract double getDurabilite();
-    public  boolean correspond(Marchandise m)
+    public  boolean accepte(Marchandise m)
     {
         Class c = this.getClass();
         return m.getClass().isAssignableFrom(c);

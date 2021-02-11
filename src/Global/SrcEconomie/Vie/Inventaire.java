@@ -2,6 +2,7 @@ package Global.SrcEconomie.Vie;
 
 import Global.SrcEconomie.Entreprises.Industrie.Marchandises.FamillesMarchandises;
 import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Marchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Protection;
 import Global.SrcVirus.Fonctions;
 
 import java.util.LinkedList;
@@ -30,6 +31,17 @@ public class Inventaire {
         {
             inventaireEquipe.remove(m);
         }
+    }
+
+    public double calculerProtectionEmission()
+    {
+        return inventaireEquipe.stream().filter(x->x instanceof Protection).map(x->((Protection) x)
+                .getProtectionEmission()).collect(Collectors.summingDouble(x->x));
+    }
+    public double calculerProtectionReception()
+    {
+        return inventaireEquipe.stream().filter(x->x instanceof Protection).map(x->((Protection) x)
+                .getProtectionReception()).collect(Collectors.summingDouble(x->x));
     }
 
     private List<Marchandise> getMarchandiseFamille(FamillesMarchandises fm, List<Marchandise> source)
@@ -70,7 +82,7 @@ public class Inventaire {
 
     private List<Marchandise> getMarchandiseType(Marchandise fm, List<Marchandise> source)
     {
-        List<Marchandise> possib = source.stream().filter(m->m.correspond(fm))
+        List<Marchandise> possib = source.stream().filter(m->m.accepte(fm))
                 .collect(Collectors.toList());
         return possib;
     }

@@ -50,10 +50,10 @@ public class Infection {
         double delta = virus.getReproduction()*chargeVirale- virus.getFragilite()*immunite.getActivite();
         chargeVirale = Math.max(0,chargeVirale+delta*dt);
     }
-    public double getPotentielTransmission(double distance )
+    public double getPotentielTransmission(double distance, double protectionCible )
     {
         double protectionEmissions = hote.getProtectionEmission();
-        double k_dist = 1.0-Math.exp(-(1/Math.pow(distance*protectionEmissions,2)));
+        double k_dist = 1.0-Math.exp(-(1/Math.pow(distance*(protectionEmissions+protectionCible),2)));
         double k_vir = 1.0-Math.exp(-(chargeVirale* virus.getContagiosite()));
         return k_dist*k_vir;
     }

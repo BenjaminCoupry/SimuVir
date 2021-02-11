@@ -19,23 +19,43 @@ import Global.SrcEconomie.Hitboxes.HitboxCercle;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.Voierie.Route;
-import Global.SrcVirus.Lieu;
-import PathFinding.Place;
-import sun.misc.FormattedFloatingDecimal;
 
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Architecte {
+
     public static EditMode editmod;
     public static LieuPhysique aPoser;
     public static Selectionnable selectionne;
     public static Point2D ptA;
     public static Point2D ptB;
 
+    public static void passerMode(EditMode mode)
+    {
+        switch (mode)
+        {
+            case PLACER:
+                //TODO null quand on pourra chosir les batiments
+                aPoser = getUniversite(TypeConnaissance.AGRICULTURE,0);
+                editmod = EditMode.PLACER;
+                break;
+            case ROUTE:
+                ptA = null;
+                ptB = null;
+                editmod = EditMode.ROUTE;
+                break;
+            case SUPPRIMER:
+                editmod = EditMode.SUPPRIMER;
+                break;
+            case VIE:
+                clcPath();
+                editmod = EditMode.VIE;
+                break;
+        }
+    }
     public static void clique(double x, double y)
     {
         if(editmod.equals(editmod.PLACER))
@@ -53,15 +73,15 @@ public class Architecte {
             if(lp != null)
             {
                 if(lp instanceof LieuPhysique) {
-                    ((LieuPhysique) lp).supprimer();
+                   Monde.supprimerLieu((LieuPhysique) lp);
                 }else if (lp instanceof Habitant)
                 {
-                    ((Habitant) lp).supprimer();
+                    Monde.supprimerHabitant((Habitant) lp);
                 }
             }
 
         }
-        if(editmod.equals(editmod.SELECTION))
+        if(editmod.equals(editmod.VIE))
         {
             selectionne = Monde.selectionner(x,y);
         }
@@ -96,6 +116,11 @@ public class Architecte {
                 }
             }
         }
+    }
+
+    public static void clcPath()
+    {
+        Monde.calculerInfoChemins();
     }
 
     public static Route poserRoute(double x, double y)

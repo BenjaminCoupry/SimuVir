@@ -31,7 +31,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
     {
         for(Marchandise m : stock)
         {
-            if(m.correspond(tm))
+            if(m.accepte(tm))
             {
                 return true;
             }
@@ -53,7 +53,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
             Marchandise achat=null;
             for(Marchandise m : stock)
             {
-                if(m.correspond(tm))
+                if(m.accepte(tm))
                 {
                     achat = m;
                     break;
@@ -67,7 +67,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
     @Override
     public Marchandise fournir(Marchandise tm) {
         List<Marchandise> mt = stock.stream()
-                .filter(march -> march.correspond(tm))
+                .filter(march -> march.accepte(tm))
                 .collect(Collectors.toList());
         if(mt.size()>0)
         {
@@ -89,7 +89,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
     @Override
     public boolean disponible(Marchandise tm) {
         List<Marchandise> mt = stock.stream()
-                .filter(march -> march.correspond(tm))
+                .filter(march -> march.accepte(tm))
                 .collect(Collectors.toList());
         return mt.size()>0;
     }
@@ -99,7 +99,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
         if(Monde.getTransporteurs().size() >0) {
             for (UsageMarchandise um : catalogue) {
                 List<Marchandise> mt = stock.stream()
-                        .filter(march -> march.correspond(um.getTypeMarchandise()))
+                        .filter(march -> march.accepte(um.getTypeMarchandise()))
                         .collect(Collectors.toList());
                 int delta = um.getNbUsage() - mt.size();
                 for (int i = 0; i < delta; i++) {

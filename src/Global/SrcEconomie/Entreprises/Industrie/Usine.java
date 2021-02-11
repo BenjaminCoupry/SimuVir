@@ -40,7 +40,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
         {
             int restant = um.getNbUsage();
             List<Marchandise> mt = entree.stream()
-                    .filter(march -> march.correspond(um.getTypeMarchandise()))
+                    .filter(march -> march.accepte(um.getTypeMarchandise()))
                     .collect(Collectors.toList());
             for(int i=0;i<restant;i++)
             {
@@ -69,7 +69,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
         {
             int restant = um.getNbUsage();
             List<Marchandise> mt = entree.stream()
-                    .filter(march -> march.correspond(um.getTypeMarchandise()))
+                    .filter(march -> march.accepte(um.getTypeMarchandise()))
                     .collect(Collectors.toList());
             for(int i=0;i<restant;i++)
             {
@@ -116,7 +116,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
     @Override
     public Marchandise fournir(Marchandise tm) {
         List<Marchandise> mt = sortie.stream()
-                .filter(march -> march.correspond(tm))
+                .filter(march -> march.accepte(tm))
                 .collect(Collectors.toList());
         if(mt.size()>0)
         {
@@ -138,7 +138,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
     @Override
     public boolean disponible(Marchandise tm) {
         List<Marchandise> mt = sortie.stream()
-                .filter(march -> march.correspond(tm))
+                .filter(march -> march.accepte(tm))
                 .collect(Collectors.toList());
         return mt.size()>0;
     }
@@ -154,7 +154,7 @@ public class Usine extends Entreprise implements Stockage, DtListener, JourListe
         if(Monde.getTransporteurs().size() >0) {
             for (UsageMarchandise um : recette.getConsommation()) {
                 List<Marchandise> mt = entree.stream()
-                        .filter(march -> march.correspond(um.getTypeMarchandise()))
+                        .filter(march -> march.accepte(um.getTypeMarchandise()))
                         .collect(Collectors.toList());
                 int delta = um.getNbUsage() - mt.size();
                 for (int i = 0; i < delta; i++) {
