@@ -38,7 +38,7 @@ public class HitboxCercle implements Hitbox{
 
     @Override
     public double getLongueur() {
-        return r;
+        return r*2;
     }
 
     @Override
