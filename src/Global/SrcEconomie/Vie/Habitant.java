@@ -2,6 +2,7 @@ package Global.SrcEconomie.Vie;
 
 import Global.Editor.Selectionnable;
 import Global.Monde;
+import Global.Render.Texturable;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
@@ -29,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-public class Habitant extends Individu implements Monetaire, JourListener,DtListener, Selectionnable {
+public class Habitant extends Individu implements Monetaire, JourListener,DtListener, Selectionnable, Texturable {
     String prenom;
     String nomFamille;
     Residence residence;
@@ -194,7 +195,9 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     }
     public void entrerLieu(LieuPhysique cible)
     {
-        position.getVisiteurs().remove(this);
+        if(position != null) {
+            position.getVisiteurs().remove(this);
+        }
         position =cible;
         cible.getVisiteurs().add(this);
     }

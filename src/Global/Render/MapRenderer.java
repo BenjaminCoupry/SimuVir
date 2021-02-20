@@ -1,19 +1,37 @@
 package Global.Render;
 
+import Global.Editor.Architecte;
+import Global.Monde;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
+import Global.SrcEconomie.Vie.Habitant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
 
-public class MapRenderer extends JPanel {
+public class MapRenderer extends JPanel  implements MouseListener {
     double scale;
     double y0;
     double x0;
     double w ;
     double h ;
+
+    public MapRenderer(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+        x0=0;
+        y0=0;
+        scale =1;
+        Dimension size = getSize();
+        w = size.getWidth();
+        h = size.getHeight();
+        this.addMouseListener(this);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Dimension size = getSize();
         w = size.getWidth();
@@ -27,6 +45,7 @@ public class MapRenderer extends JPanel {
                 RenderingHints.VALUE_RENDER_QUALITY);
 
         g2d.setRenderingHints(rh);
+        drawElements(g2d);
     }
     public boolean dansChamp(Point2D coordRender)
     {
@@ -57,6 +76,70 @@ public class MapRenderer extends JPanel {
     }
     public void drawLieuPhysique(LieuPhysique lp, Graphics2D g2d)
     {
-        drawConnexions(lp,g2d);
+        Point2D render = getCoordRender(lp.getPoint());
+        if(dansChamp(render)) {
+            drawConnexions(lp, g2d);
+            Image tx = RessGetter.getTexture(lp);
+            int w = (int)(lp.getHitbox().getLongueur()/scale);
+            int h = (int)(lp.getHitbox().getLongueur()/scale);
+            int x0 = (int)render.getX() - w/2;
+            int y0 = (int)render.getY() - h/2;
+            if(tx != null)
+            {
+                g2d.drawImage(tx,x0,y0,w,h,null);
+            }
+        }
+    }
+    public void drawHabitant(Habitant ha, Graphics2D g2d)
+    {
+        Point2D render = getCoordRender(ha.getPositionActuele());
+        if(dansChamp(render)) {
+            Image tx = RessGetter.getTexture(ha);
+            int w = (int)(ha.getHitbox().getLongueur()/scale);
+            int h = (int)(ha.getHitbox().getLongueur()/scale);
+            int x0 = (int)render.getX() - w/2;
+            int y0 = (int)render.getY() - h/2;
+            if(tx != null)
+            {
+                g2d.drawImage(tx,x0,y0,w,h,null);
+            }
+        }
+    }
+    public void drawElements(Graphics2D g2d)
+    {
+        for(LieuPhysique lp : Monde.getLieuxPhysiques())
+        {
+            drawLieuPhysique(lp,g2d);
+        }
+        for(Habitant h : Monde.getHabitants())
+        {
+            drawHabitant(h,g2d);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point2D.Double xr = getCoordReelles(e.getPoint());
+        Architecte.clique(xr.getX(),xr.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

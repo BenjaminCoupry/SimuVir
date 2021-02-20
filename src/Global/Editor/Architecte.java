@@ -29,6 +29,7 @@ public class Architecte {
 
     public static EditMode editmod;
     public static LieuPhysique aPoser;
+    public static Habitant aPoserH;
     public static Selectionnable selectionne;
     public static Point2D ptA;
     public static Point2D ptB;
@@ -37,10 +38,10 @@ public class Architecte {
     {
         switch (mode)
         {
-            case PLACER:
+            case PLACER_BATIMENT:
                 //TODO null quand on pourra chosir les batiments
                 aPoser = getUniversite(TypeConnaissance.AGRICULTURE,0);
-                editmod = EditMode.PLACER;
+                editmod = EditMode.PLACER_BATIMENT;
                 break;
             case ROUTE:
                 ptA = null;
@@ -54,11 +55,25 @@ public class Architecte {
                 clcPath();
                 editmod = EditMode.VIE;
                 break;
+            case PLACER_HABITANT:
+                aPoserH = null;
+                editmod = EditMode.PLACER_HABITANT;
+                break;
         }
     }
     public static void clique(double x, double y)
     {
-        if(editmod.equals(editmod.PLACER))
+        if(editmod.equals(EditMode.PLACER_HABITANT))
+        {
+            Selectionnable lp = Monde.selectionner(x,y);
+            if(lp != null)
+            {
+                if(lp instanceof LieuPhysique) {
+                   aPoserH.entrerLieu((LieuPhysique) lp);
+                }
+            }
+        }
+        else if(editmod.equals(EditMode.PLACER_BATIMENT))
         {
             if(aPoser!= null) {
                 aPoser.setX(x);
@@ -67,7 +82,7 @@ public class Architecte {
                 aPoser = null;
             }
         }
-        if(editmod.equals(editmod.SUPPRIMER))
+        else if(editmod.equals(EditMode.SUPPRIMER))
         {
             Selectionnable lp = Monde.selectionner(x,y);
             if(lp != null)
@@ -81,11 +96,11 @@ public class Architecte {
             }
 
         }
-        if(editmod.equals(editmod.VIE))
+        else if(editmod.equals(EditMode.VIE))
         {
             selectionne = Monde.selectionner(x,y);
         }
-        if(editmod.equals(editmod.ROUTE))
+        else if(editmod.equals(EditMode.ROUTE))
         {
             if(ptA == null)
             {

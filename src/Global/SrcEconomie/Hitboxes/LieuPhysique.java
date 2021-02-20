@@ -2,6 +2,7 @@ package Global.SrcEconomie.Hitboxes;
 
 import Global.Editor.Selectionnable;
 import Global.Monde;
+import Global.Render.Texturable;
 import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.JourListener;
@@ -15,7 +16,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LieuPhysique extends Lieu implements DtListener, Selectionnable {
+public class LieuPhysique extends Lieu implements DtListener, Selectionnable, Texturable {
     List<LieuPhysique> adjacents;
     Place place;
     Hitbox hitbox;

@@ -1,5 +1,5 @@
 package Global.Editor;
 
 public enum EditMode {
-    PLACER, VIE,ROUTE,SUPPRIMER;
+    PLACER_BATIMENT, VIE,ROUTE,SUPPRIMER,PLACER_HABITANT;
 }
