@@ -2,10 +2,12 @@ package Global.Editor;
 
 import Global.Monde;
 import Global.SrcEconomie.ConstantesEco;
+import Global.SrcEconomie.Entreprises.Commerce.Boutique;
 import Global.SrcEconomie.Entreprises.Enseignement.Connaissance;
 import Global.SrcEconomie.Entreprises.Enseignement.Formation;
 import Global.SrcEconomie.Entreprises.Enseignement.TypeConnaissance;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
+import Global.SrcEconomie.Entreprises.Finance.Banque;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireCompose;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireSimple;
 import Global.SrcEconomie.Entreprises.Horaires.HoraireTravail;
@@ -13,51 +15,59 @@ import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Ble;
 import Global.SrcEconomie.Entreprises.Industrie.Marchandises.Pain;
 import Global.SrcEconomie.Entreprises.Industrie.RecetteIndustrie;
 import Global.SrcEconomie.Entreprises.Industrie.UsageMarchandise;
+import Global.SrcEconomie.Entreprises.Industrie.Usine;
 import Global.SrcEconomie.Entreprises.Poste;
+import Global.SrcEconomie.Entreprises.Transport.EntrepriseTransport;
+import Global.SrcEconomie.Etat;
 import Global.SrcEconomie.Hitboxes.Hitbox;
 import Global.SrcEconomie.Hitboxes.HitboxCercle;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
+import Global.SrcEconomie.Logement.Residence;
 import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcEconomie.Voierie.Route;
+import Global.SrcVirus.Fonctions;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Architecte {
 
-    public static EditMode editmod;
-    public static LieuPhysique aPoser;
-    public static Habitant aPoserH;
-    public static Selectionnable selectionne;
-    public static Point2D ptA;
-    public static Point2D ptB;
+    public static EditMode editmod = EditMode.ROUTE;
+    public static EditMode editmod_ = EditMode.ROUTE;
+    public static LieuPhysique aPoser = null;
+    public static Habitant aPoserH= null;
+    public static Selectionnable selectionne = null;
+    public static Point2D ptA = null;
+    public static Point2D ptB = null;
+    private static int uval =0;
+    private static int ubat =0;
 
     public static void passerMode(EditMode mode)
     {
         switch (mode)
         {
             case PLACER_BATIMENT:
-                //TODO null quand on pourra chosir les batiments
-                aPoser = getUniversite(TypeConnaissance.AGRICULTURE,0);
-                editmod = EditMode.PLACER_BATIMENT;
+                aPoser = getBatiment();
+                editmod_ = EditMode.PLACER_BATIMENT;
                 break;
             case ROUTE:
                 ptA = null;
                 ptB = null;
-                editmod = EditMode.ROUTE;
+                editmod_ = EditMode.ROUTE;
                 break;
             case SUPPRIMER:
-                editmod = EditMode.SUPPRIMER;
+                editmod_ = EditMode.SUPPRIMER;
                 break;
             case VIE:
                 clcPath();
-                editmod = EditMode.VIE;
+                editmod_ = EditMode.VIE;
                 break;
             case PLACER_HABITANT:
-                aPoserH = null;
-                editmod = EditMode.PLACER_HABITANT;
+                aPoserH = getHabitant();
+                editmod_ = EditMode.PLACER_HABITANT;
                 break;
         }
     }
@@ -70,6 +80,7 @@ public class Architecte {
             {
                 if(lp instanceof LieuPhysique) {
                    aPoserH.entrerLieu((LieuPhysique) lp);
+                   aPoserH = null;
                 }
             }
         }
@@ -258,6 +269,11 @@ public class Architecte {
         return new Formation(fourni,requis,level*ConstantesEco.difficulte_formation);
     }
 
+    public static Etat getEtatBasique()
+    {
+        return new Etat(Fonctions.getConstante(0.2),Fonctions.getConstante(0.01),100,Fonctions.getConstante(5),Fonctions.getConstante(15));
+    }
+
     public static Poste getPosteDirecteur(){
         List<Connaissance> req = new ArrayList<>();
         req.add(new Connaissance(TypeConnaissance.MANAGMENT,1));
@@ -331,6 +347,111 @@ public class Architecte {
             getPosteEnseignant(level).attribuer(u);
         }
         return u;
+    }
+    public static List<UsageMarchandise> getCatalogueBasique()
+    {
+        List<UsageMarchandise> um = new LinkedList<>();
+        um.add(new UsageMarchandise(5,new Pain()));
+        return um;
+    }
+    public static Boutique getBoutique()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleBoutique);
+        double trav = ConstantesEco.tailleBoutique/ConstantesEco.vitesse_marche;
+        Boutique b = new Boutique(h,trav,0,0,getCatalogueBasique());
+        getPosteVendeur().attribuer(b);
+        return b;
+    }
+    public static Banque getBanque()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleBanque);
+        double trav = ConstantesEco.tailleBanque/ConstantesEco.vitesse_marche;
+        Banque b = new Banque(h,trav,0,0,0.1,5);
+        getPosteBanquier().attribuer(b);
+        getPosteManager().attribuer(b);
+        return b;
+    }
+    public static Usine getFerme()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleFerme);
+        double trav = ConstantesEco.tailleFerme/ConstantesEco.vitesse_marche;
+        Usine b = new Usine(h,trav,0,0,getRecetteAgricole());
+        for(int i=0;i<3;i++) {
+            getPosteAgriculteur().attribuer(b);
+        }
+        return b;
+    }
+    public static Usine getBoulangerie()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleBoulangerie);
+        double trav = ConstantesEco.tailleBoulangerie/ConstantesEco.vitesse_marche;
+        Usine b = new Usine(h,trav,0,0,getRecetteAlimentaire());
+        for(int i=0;i<3;i++) {
+            getPosteOuvrierJour().attribuer(b);
+        }
+        for(int i=0;i<2;i++) {
+            getPosteOuvrierNuit().attribuer(b);
+        }
+        return b;
+    }
+    public static EntrepriseTransport getEntrepriseTransport()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleEntrepriseTransport);
+        double trav = ConstantesEco.tailleEntrepriseTransport/ConstantesEco.vitesse_marche;
+        EntrepriseTransport b = new EntrepriseTransport(h,trav,0,0,5);
+        getPosteVendeur().attribuer(b);
+        for(int i=0;i<3;i++) {
+            getPosteOuvrierJour().attribuer(b);
+        }
+        for(int i=0;i<2;i++) {
+            getPosteOuvrierNuit().attribuer(b);
+        }
+        return b;
+    }
+    public static Residence getMaison()
+    {
+        Hitbox h = new HitboxCercle(0,0,ConstantesEco.tailleMaison);
+        double trav = ConstantesEco.tailleMaison/ConstantesEco.vitesse_marche;
+        return new Residence(h,trav,0,0,5,5,Fonctions.getUID(),Monde.getEtat());
+    }
+    public static Habitant getHabitant()
+    {
+        return new Habitant(Fonctions.getSigmoide(20,0.5,1),0,Fonctions.getUID(),Fonctions.getUID(),null);
+    }
+    public static Universite getUniversite()
+    {
+        TypeConnaissance tc = TypeConnaissance.values()[uval];
+        uval = (uval+1)%TypeConnaissance.values().length;
+        return getUniversite(tc,0);
+    }
+    public static LieuPhysique getBatiment()
+    {
+        ubat = (ubat+1)%6;
+        switch (ubat)
+        {
+            case 0:
+                return getBoutique();
+            case 1:
+                return getUniversite();
+            case 2:
+                return getBanque();
+            case 3:
+                return getFerme();
+            case 4:
+                return getBoulangerie();
+            case 5 :
+                return getEntrepriseTransport();
+            default:
+                return null;
+        }
+    }
+
+    public static EditMode getEditmod() {
+        return editmod;
+    }
+
+    public static void updateEditmod_() {
+        editmod = editmod_;
     }
     //TODO finaliser
 

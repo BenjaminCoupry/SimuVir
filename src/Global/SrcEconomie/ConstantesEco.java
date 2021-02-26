@@ -20,4 +20,10 @@ public final class ConstantesEco {
     public static final double place_par_taille = 1;
 
     public static final double tailleUniversite = 50;
+    public static final double tailleBoutique = 10;
+    public static final double tailleBanque = 13;
+    public static final double tailleFerme = 17;
+    public static final double tailleBoulangerie = 5;
+    public static final double tailleEntrepriseTransport = 9;
+    public static final double tailleMaison = 7;
 }

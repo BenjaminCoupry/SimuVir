@@ -66,8 +66,8 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         banque = null;
         poste = null;
         cooldown = ConstantesEco.cooldown_actions;
-        start_pt = position.getHitbox().getRandomPoint();
-        next_pt = position.getHitbox().getRandomPoint();;
+        start_pt = null;
+        next_pt = null;
         modeActiviteReel = ModeActivite.ATTENDRE;
         modeActiviteVoulu = ModeActivite.ATTENDRE;
         avancementLieu =0;
@@ -497,6 +497,10 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
 
     public void setBanque(Banque banque) {
         this.banque = banque;
+    }
+
+    public Point2D getNext_pt() {
+        return next_pt;
     }
 }
 

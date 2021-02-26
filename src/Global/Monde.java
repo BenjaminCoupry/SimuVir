@@ -1,5 +1,7 @@
 package Global;
 
+import Global.Editor.Architecte;
+import Global.Editor.EditMode;
 import Global.Editor.Selectionnable;
 import Global.SrcEconomie.*;
 import Global.SrcEconomie.Entreprises.Commerce.Boutique;
@@ -27,20 +29,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Monde {
-    static HashMap<String,Virus> virusExistants;
-    static List<LieuPhysique> lieuxPhysiques;
-    static HashMap<Place,LieuPhysique> lieuPlace;
-    static List<Habitant> habitants;
-    static double heure;
-    static int jour;
-    static double dt;
-    static Etat etat;
-    //TODO enregistrer les listeners
-    static List<JourListener> jourListeners;
-    static List<DtListener> dtListeners;
+    static HashMap<String,Virus> virusExistants = new HashMap<>();
+    static List<LieuPhysique> lieuxPhysiques = new LinkedList<>();
+    static HashMap<Place,LieuPhysique> lieuPlace = new HashMap<>();
+    static List<Habitant> habitants = new LinkedList<>();
+    static double heure = 0;
+    static int jour = 0;
+    static double dt = 0.1;
+    //Todo constructeur etat
+    static Etat etat = Architecte.getEtatBasique();
+    static List<JourListener> jourListeners = new LinkedList<>();
+    static List<DtListener> dtListeners = new LinkedList<>();
 
-    static List<Marchandise> obligatoires;
-    static boolean pathToUpdate;
+    static List<Marchandise> obligatoires = new LinkedList<>();
+    static boolean pathToUpdate = true;
 
 
     public static List<Marchandise> getObligatoires() {
@@ -291,25 +293,27 @@ public class Monde {
         return retour;
     }
 
-    public void Update()
+    public static void Update()
     {
-        heure += dt;
-        UpdateDt();
-        if(heure >24.0)
-        {
-            jour +=1;
-            heure =0;
-            UpdateJournaliere();
+        Architecte.updateEditmod_();
+        if(Architecte.getEditmod() == EditMode.VIE) {
+            heure += dt;
+            UpdateDt();
+            if (heure > 24.0) {
+                jour += 1;
+                heure = 0;
+                UpdateJournaliere();
+            }
         }
     }
-    public void UpdateJournaliere()
+    public static void UpdateJournaliere()
     {
         for(JourListener jl : jourListeners)
         {
             jl.jourPasse(dt);
         }
     }
-    public void UpdateDt()
+    public static void UpdateDt()
     {
         for(DtListener jl : dtListeners)
         {
@@ -410,11 +414,14 @@ public class Monde {
         contact.addAll(contact_l);
         if(contact.size()>0)
         {
-            return contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
+            Selectionnable res = contact.stream().min(Comparator.comparingDouble(l->new Point2D.Double(x,y)
                     .distance(l.getHitbox().getPoint()))).get();
+            System.out.println(res);
+            return res;
         }
         else
         {
+            System.out.println("pas de selection");
             return null;
         }
     }

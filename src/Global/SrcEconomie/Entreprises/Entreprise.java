@@ -128,4 +128,5 @@ public class Entreprise extends LieuPhysique implements Monetaire, DtListener, J
     public void jourPasse(double dt) {
         payerSalaires();
     }
+
 }

@@ -29,11 +29,12 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
 
     public boolean peutVendre(Marchandise tm)
     {
+
         for(Marchandise m : stock)
         {
             if(m.accepte(tm))
             {
-                return true;
+                return getEfficacite()>0;
             }
         }
         return false;
@@ -109,6 +110,7 @@ public class Boutique extends Entreprise implements Stockage, DtListener, JourLi
             }
         }
     }
+
 
     @Override
     public void jourPasse(double dt)

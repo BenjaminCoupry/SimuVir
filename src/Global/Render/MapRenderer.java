@@ -2,6 +2,7 @@ package Global.Render;
 
 import Global.Editor.Architecte;
 import Global.Monde;
+import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Vie.Habitant;
 
@@ -18,8 +19,9 @@ public class MapRenderer extends JPanel  implements MouseListener {
     double w ;
     double h ;
 
-    public MapRenderer(boolean isDoubleBuffered) {
-        super(isDoubleBuffered);
+    public MapRenderer() {
+        super(true);
+        setPreferredSize(new Dimension(300,600));
         x0=0;
         y0=0;
         scale =1;
@@ -68,6 +70,8 @@ public class MapRenderer extends JPanel  implements MouseListener {
     public void drawConnexions(LieuPhysique lp, Graphics2D g2d)
     {
         Point2D start = getCoordRender(lp.getPoint());
+        g2d.setStroke(new BasicStroke((int)(ConstantesEco.taille_route/scale)));
+        g2d.setColor(Color.BLACK);
         for(LieuPhysique lpc : lp.getAdjacents())
         {
             Point2D finish = getCoordRender(lpc.getPoint());
@@ -87,6 +91,10 @@ public class MapRenderer extends JPanel  implements MouseListener {
             if(tx != null)
             {
                 g2d.drawImage(tx,x0,y0,w,h,null);
+                if(Architecte.selectionne == lp)
+                {
+                    g2d.drawOval(x0,y0,w,h);
+                }
             }
         }
     }
@@ -102,6 +110,17 @@ public class MapRenderer extends JPanel  implements MouseListener {
             if(tx != null)
             {
                 g2d.drawImage(tx,x0,y0,w,h,null);
+                if(Architecte.selectionne == ha)
+                {
+                    g2d.drawOval(x0,y0,w,h);
+                    Point2D nx = ha.getNext_pt();
+                    if(nx != null) {
+                        Point2D rendernx = getCoordRender(nx);
+                        if (dansChamp(rendernx)) {
+                            g2d.drawLine((int) render.getX(), (int) render.getY(), (int) rendernx.getX(), (int) rendernx.getY());
+                        }
+                    }
+                }
             }
         }
     }
