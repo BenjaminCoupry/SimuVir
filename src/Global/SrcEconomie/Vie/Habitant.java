@@ -23,6 +23,8 @@ import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Logement.Residence;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Individu;
+import Global.SrcVirus.Lieu;
+
 import java.awt.geom.Point2D;
 
 import java.util.Comparator;
@@ -359,9 +361,11 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
     public void partirVisiter()
     {
         List<LieuPhysique> lieuxPhysiques = Monde.getLieuxPhysiques();
-        LieuPhysique lp = lieuxPhysiques.get(Fonctions.r.nextInt(lieuxPhysiques.size()));
-        objectif = lp;
-        modeActiviteReel = ModeActivite.VISITER;
+        if(objectif == position) {
+            LieuPhysique lp = lieuxPhysiques.get(Fonctions.r.nextInt(lieuxPhysiques.size()));
+            objectif = lp;
+            modeActiviteReel = ModeActivite.VISITER;
+        }
     }
     public void attendre()
     {
@@ -412,7 +416,7 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         }
         if(isMort())
         {
-            supprimer();
+            Monde.supprimerHabitant(this);
         }
     }
 
@@ -481,6 +485,22 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         if(banque != null)
         {
             banque.oublier(this);
+        }
+
+    }
+    public void oublier(LieuPhysique lp)
+    {
+        if(position == lp)
+        {
+            position = null;
+            Monde.supprimerHabitant(this);
+        }else {
+            if (next == lp) {
+                next = position;
+            }
+            if (objectif == lp) {
+                objectif = position;
+            }
         }
     }
 

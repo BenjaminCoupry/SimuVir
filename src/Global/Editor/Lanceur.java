@@ -10,10 +10,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Lanceur {
+    static MapRenderer mr = new MapRenderer();
+    static JPanel actions = ActionMenu.getPannelActions();
+    static Timer clk = new Timer();
     public static void main(String[] args) {
-        MapRenderer mr = new MapRenderer();
-        JPanel actions = ActionMenu.getPannelActions();
-        Timer clk = new Timer();
         JFrame frame = new JFrame("SimuVir");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,300);
@@ -21,6 +21,13 @@ public class Lanceur {
         frame.getContentPane().add(BorderLayout.SOUTH, actions);
         frame.setVisible(true);
         frame.pack();
+
+    }
+    public static void pause() {
+        clk.cancel();
+    }
+    public static void resume() {
+        clk = new Timer();
         clk.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -28,6 +35,14 @@ public class Lanceur {
                 System.out.println(Monde.getHabitants());
                 mr.repaint();
             }
-        },0,1000);
+        },0,100);
     }
+    public static MapRenderer getMr() {
+        return mr;
+    }
+
+    public static JPanel getActions() {
+        return actions;
+    }
+
 }

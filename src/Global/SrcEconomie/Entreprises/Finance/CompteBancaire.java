@@ -40,7 +40,9 @@ public class CompteBancaire {
         historiqueSolde.add(somme);
         historiqueMouvements.add(valeurReelle);
         Monde.getEtat().incrementerPIB(valeur);
-        Monde.getEtat().getCompteBancaire().crediter(valeurImpot,"TVA "+motif);
+        if(this != Monde.getEtat().getCompteBancaire()) {
+            Monde.getEtat().getCompteBancaire().crediter(valeurImpot, "TVA " + motif);
+        }
     }
     public void debiter(double valeur, String motif)
     {

@@ -9,9 +9,9 @@ public final class ConstantesEco {
     public static final double taille_route = 3;
     public static final double vitesse_marche = 4;
     public static final double difficulte_formation = 50;
-    public static final double cooldown_actions = 0.5;
+    public static final double cooldown_actions = 5;
 
-    public static final double taille_individu = 0.5;
+    public static final double taille_individu = 10.5;
     public static final double dist_connexion_route = 2.5;
 
     public static final double temps_prod_agricole = 2;

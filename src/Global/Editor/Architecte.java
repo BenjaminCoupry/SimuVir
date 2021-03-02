@@ -50,26 +50,33 @@ public class Architecte {
         switch (mode)
         {
             case PLACER_BATIMENT:
+                Lanceur.pause();
                 aPoser = getBatiment();
                 editmod_ = EditMode.PLACER_BATIMENT;
                 break;
             case ROUTE:
+                Lanceur.pause();
                 ptA = null;
                 ptB = null;
                 editmod_ = EditMode.ROUTE;
                 break;
             case SUPPRIMER:
+                Lanceur.pause();
                 editmod_ = EditMode.SUPPRIMER;
                 break;
             case VIE:
+                Monde.majListeners();
                 clcPath();
                 editmod_ = EditMode.VIE;
+                Lanceur.resume();
                 break;
             case PLACER_HABITANT:
+                Lanceur.pause();
                 aPoserH = null;
                 editmod_ = EditMode.PLACER_HABITANT;
                 break;
         }
+        updateEditmod_();
     }
     public static void clique(double x, double y)
     {
@@ -144,6 +151,7 @@ public class Architecte {
                 }
             }
         }
+        Lanceur.getMr().repaint();
     }
 
     public static void clcPath()
@@ -418,7 +426,7 @@ public class Architecte {
     }
     public static Habitant getHabitant(LieuPhysique lp)
     {
-        return new Habitant(Fonctions.getSigmoide(20,0.5,1),0,Fonctions.getUID(),Fonctions.getUID(),lp);
+        return new Habitant(Fonctions.getSigmoide(100,0.5,1),0,Fonctions.getUID(),Fonctions.getUID(),lp);
     }
     public static Universite getUniversite()
     {

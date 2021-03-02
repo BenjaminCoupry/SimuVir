@@ -40,11 +40,19 @@ public class Monde {
     static Etat etat = Architecte.getEtatBasique();
     static List<JourListener> jourListeners = new LinkedList<>();
     static List<DtListener> dtListeners = new LinkedList<>();
-
+    static List<JourListener> jourListeners_next = new LinkedList<>();
+    static List<DtListener> dtListeners_next = new LinkedList<>();
     static List<Marchandise> obligatoires = new LinkedList<>();
     static boolean pathToUpdate = true;
 
 
+    public static void majListeners()
+    {
+        jourListeners = jourListeners_next;
+        dtListeners = dtListeners_next;
+        jourListeners_next = new LinkedList<>(jourListeners);
+        dtListeners_next = new LinkedList<>(dtListeners);
+    }
     public static List<Marchandise> getObligatoires() {
         return obligatoires;
     }
@@ -61,11 +69,19 @@ public class Monde {
     }
     public static void addJourListener(JourListener jl)
     {
-        jourListeners.add(jl);
+        jourListeners_next.add(jl);
     }
     public static void addDtListener(DtListener dl)
     {
-        dtListeners.add(dl);
+        dtListeners_next.add(dl);
+    }
+    public static void remJourListener(JourListener jl)
+    {
+        jourListeners_next.remove(jl);
+    }
+    public static void remDtListener(DtListener dl)
+    {
+        dtListeners_next.remove(dl);
     }
 
     public static List<Stockage> trouverDisponibilites(Marchandise tm, TypeDisponibilite dispo)
@@ -131,6 +147,14 @@ public class Monde {
         pathToUpdate = true;
         l.supprimer();
         lieuxPhysiques.remove(l);
+        if(l instanceof JourListener)
+        {
+            remJourListener((JourListener) l);
+        }
+        if(l instanceof DtListener)
+        {
+            remDtListener((DtListener) l);
+        }
     }
     public static void ajouterHabitant(Habitant hab)
     {
@@ -146,8 +170,17 @@ public class Monde {
     }
     public static void supprimerHabitant(Habitant hab)
     {
+        System.out.println("rem");
         hab.supprimer();
         habitants.remove(hab);
+        if(hab instanceof JourListener)
+        {
+            remJourListener(hab);
+        }
+        if(hab instanceof DtListener)
+        {
+            remDtListener(hab);
+        }
     }
 
     public static List<Poste> trouverPostesPossibles(Habitant hab)
@@ -277,7 +310,7 @@ public class Monde {
     }
 
     public static List<Habitant> getHabitants() {
-        return habitants;
+        return new LinkedList<>(habitants);
     }
 
     public static Etat getEtat() {
@@ -313,6 +346,7 @@ public class Monde {
                 UpdateJournaliere();
             }
         }
+        majListeners();
     }
     public static void UpdateJournaliere()
     {

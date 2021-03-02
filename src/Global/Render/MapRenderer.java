@@ -95,6 +95,7 @@ public class MapRenderer extends JPanel  implements MouseListener {
                     g2d.setColor(Color.BLACK);
                     g2d.setStroke(new BasicStroke(1));
                     g2d.drawOval(x0,y0,w,h);
+                    drawConnexions(lp,g2d);
                 }
             }
         }
@@ -128,10 +129,6 @@ public class MapRenderer extends JPanel  implements MouseListener {
     }
     public void drawElements(Graphics2D g2d)
     {
-        for(LieuPhysique lp : Monde.getLieuxPhysiques())
-        {
-            drawConnexions(lp,g2d);
-        }
         for(LieuPhysique lp : Monde.getLieuxPhysiques())
         {
             drawLieuPhysique(lp,g2d);

@@ -6,6 +6,7 @@ import Global.Render.Texturable;
 import Global.SrcEconomie.ConstantesEco;
 import Global.SrcEconomie.DtListener;
 import Global.SrcEconomie.JourListener;
+import Global.SrcEconomie.Vie.Habitant;
 import Global.SrcVirus.Fonctions;
 import Global.SrcVirus.Lieu;
 import PathFinding.InfoChemin;
@@ -40,9 +41,9 @@ public class LieuPhysique extends Lieu implements DtListener, Selectionnable, Te
         {
             adjacents.add(autre);
         }
-        if(!autre.getAdjacents().contains(autre))
+        if(!autre.getAdjacents().contains(this))
         {
-            autre.getAdjacents().add(autre);
+            autre.getAdjacents().add(this);
         }
     }
 
@@ -109,6 +110,10 @@ public class LieuPhysique extends Lieu implements DtListener, Selectionnable, Te
         for(LieuPhysique adj : getAdjacents())
         {
             adj.getAdjacents().remove(this);
+        }
+        for(Habitant h : Monde.getHabitants())
+        {
+            h.oublier(this);
         }
     }
 
