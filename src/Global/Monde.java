@@ -134,6 +134,14 @@ public class Monde {
     }
     public static void ajouterHabitant(Habitant hab)
     {
+        if(hab instanceof JourListener)
+        {
+            addJourListener((JourListener) hab);
+        }
+        if(hab instanceof DtListener)
+        {
+            addDtListener((DtListener) hab);
+        }
         habitants.add(hab);
     }
     public static void supprimerHabitant(Habitant hab)

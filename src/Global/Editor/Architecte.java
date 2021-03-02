@@ -66,7 +66,7 @@ public class Architecte {
                 editmod_ = EditMode.VIE;
                 break;
             case PLACER_HABITANT:
-                aPoserH = getHabitant();
+                aPoserH = null;
                 editmod_ = EditMode.PLACER_HABITANT;
                 break;
         }
@@ -79,8 +79,9 @@ public class Architecte {
             if(lp != null)
             {
                 if(lp instanceof LieuPhysique) {
+                    aPoserH = getHabitant((LieuPhysique) lp);
                    aPoserH.entrerLieu((LieuPhysique) lp);
-                   aPoserH = null;
+                   Monde.ajouterHabitant(aPoserH);
                 }
             }
         }
@@ -90,7 +91,7 @@ public class Architecte {
                 aPoser.setX(x);
                 aPoser.setY(y);
                 poserSurRoute(aPoser);
-                aPoser = null;
+                aPoser = getBatiment();
             }
         }
         else if(editmod.equals(EditMode.SUPPRIMER))
@@ -138,7 +139,8 @@ public class Architecte {
                     {
                         tirerRoute(ptA,ptB);
                     }
-
+                    ptB =null;
+                    ptA = null;
                 }
             }
         }
@@ -414,9 +416,9 @@ public class Architecte {
         double trav = ConstantesEco.tailleMaison/ConstantesEco.vitesse_marche;
         return new Residence(h,trav,0,0,5,5,Fonctions.getUID(),Monde.getEtat());
     }
-    public static Habitant getHabitant()
+    public static Habitant getHabitant(LieuPhysique lp)
     {
-        return new Habitant(Fonctions.getSigmoide(20,0.5,1),0,Fonctions.getUID(),Fonctions.getUID(),null);
+        return new Habitant(Fonctions.getSigmoide(20,0.5,1),0,Fonctions.getUID(),Fonctions.getUID(),lp);
     }
     public static Universite getUniversite()
     {

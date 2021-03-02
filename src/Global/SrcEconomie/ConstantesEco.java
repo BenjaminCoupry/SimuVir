@@ -6,7 +6,7 @@ public final class ConstantesEco {
     public static final double coeffTransmissionEntreprise = 0.8;
     public static final double coeffTransmissionLogement = 1.0;
     public static final double coeffTransmissionRue = 0.3;
-    public static final double taille_route = 1;
+    public static final double taille_route = 3;
     public static final double vitesse_marche = 4;
     public static final double difficulte_formation = 50;
     public static final double cooldown_actions = 0.5;

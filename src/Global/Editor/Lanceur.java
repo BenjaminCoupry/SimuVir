@@ -25,6 +25,7 @@ public class Lanceur {
             @Override
             public void run() {
                 Monde.Update();
+                System.out.println(Monde.getHabitants());
                 mr.repaint();
             }
         },0,1000);

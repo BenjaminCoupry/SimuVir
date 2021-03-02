@@ -3,6 +3,7 @@ package Global.Render;
 import Global.SrcEconomie.Entreprises.Enseignement.Universite;
 import Global.SrcEconomie.Hitboxes.LieuPhysique;
 import Global.SrcEconomie.Vie.Habitant;
+import Global.SrcEconomie.Voierie.Route;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,18 +18,22 @@ public class RessGetter {
             if(tx instanceof Habitant)
             {
                 Habitant th = (Habitant) tx;
-                Image picture = ImageIO.read(new File("picture.png"));
+                Image picture = ImageIO.read(new File("Ress/hab.png"));
                 return picture;
             }
             else if(tx instanceof LieuPhysique)
             {
                 LieuPhysique tl = (LieuPhysique) tx;
-                if(tl instanceof Universite)
+                Image picture;
+                if(tl instanceof Route)
                 {
-                    Universite u = (Universite) tl;
-                    Image picture = ImageIO.read(new File("picture.png"));
-                    return picture;
+                    picture = ImageIO.read(new File("Ress/route.png"));
                 }
+                else
+                {
+                    picture = ImageIO.read(new File("Ress/bat.png"));
+                }
+                return picture;
                 //TODO....
             }
         } catch (IOException e) {

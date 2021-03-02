@@ -24,7 +24,7 @@ public class MapRenderer extends JPanel  implements MouseListener {
         setPreferredSize(new Dimension(300,600));
         x0=0;
         y0=0;
-        scale =1;
+        scale =0.3;
         Dimension size = getSize();
         w = size.getWidth();
         h = size.getHeight();
@@ -82,7 +82,6 @@ public class MapRenderer extends JPanel  implements MouseListener {
     {
         Point2D render = getCoordRender(lp.getPoint());
         if(dansChamp(render)) {
-            drawConnexions(lp, g2d);
             Image tx = RessGetter.getTexture(lp);
             int w = (int)(lp.getHitbox().getLongueur()/scale);
             int h = (int)(lp.getHitbox().getLongueur()/scale);
@@ -93,6 +92,8 @@ public class MapRenderer extends JPanel  implements MouseListener {
                 g2d.drawImage(tx,x0,y0,w,h,null);
                 if(Architecte.selectionne == lp)
                 {
+                    g2d.setColor(Color.BLACK);
+                    g2d.setStroke(new BasicStroke(1));
                     g2d.drawOval(x0,y0,w,h);
                 }
             }
@@ -100,6 +101,7 @@ public class MapRenderer extends JPanel  implements MouseListener {
     }
     public void drawHabitant(Habitant ha, Graphics2D g2d)
     {
+        System.out.println(ha.toString());
         Point2D render = getCoordRender(ha.getPositionActuele());
         if(dansChamp(render)) {
             Image tx = RessGetter.getTexture(ha);
@@ -126,6 +128,10 @@ public class MapRenderer extends JPanel  implements MouseListener {
     }
     public void drawElements(Graphics2D g2d)
     {
+        for(LieuPhysique lp : Monde.getLieuxPhysiques())
+        {
+            drawConnexions(lp,g2d);
+        }
         for(LieuPhysique lp : Monde.getLieuxPhysiques())
         {
             drawLieuPhysique(lp,g2d);

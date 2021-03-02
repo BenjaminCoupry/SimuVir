@@ -66,8 +66,8 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
         banque = null;
         poste = null;
         cooldown = ConstantesEco.cooldown_actions;
-        start_pt = null;
-        next_pt = null;
+        start_pt = position.getPoint();
+        next_pt = position.getPoint();
         modeActiviteReel = ModeActivite.ATTENDRE;
         modeActiviteVoulu = ModeActivite.ATTENDRE;
         avancementLieu =0;
@@ -501,6 +501,33 @@ public class Habitant extends Individu implements Monetaire, JourListener,DtList
 
     public Point2D getNext_pt() {
         return next_pt;
+    }
+
+    @Override
+    public String toString() {
+        return "Habitant{" +
+                "prenom='" + prenom + '\'' +
+                ", nomFamille='" + nomFamille + '\'' +
+                ", residence=" + residence +
+                ", universite=" + universite +
+                ", banque=" + banque +
+                ", connaissances=" + connaissances +
+                ", poste=" + poste +
+                ", compteBancaire=" + compteBancaire +
+                ", position=" + position +
+                ", next=" + next +
+                ", objectif=" + objectif +
+                ", volonteAchat=" + volonteAchat +
+                ", modeActiviteReel=" + modeActiviteReel +
+                ", modeActiviteVoulu=" + modeActiviteVoulu +
+                ", avancementLieu=" + avancementLieu +
+                ", besoins=" + besoins +
+                ", next_pt=" + next_pt +
+                ", start_pt=" + start_pt +
+                ", cooldown=" + cooldown +
+                ", inventaire=" + inventaire +
+                ", hitbox=" + hitbox +
+                '}';
     }
 }
 
